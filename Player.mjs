@@ -19,16 +19,15 @@ const MAX_VELOCITY = 8;
  */
 const TURNING_POWER = 4;
 
-/**
- * px/s
- */
-const BRAKING = 10;
-
 export class Player {
     #pos;
+    
     #ship;
     #enginesIdle;
     #enginesPowered;
+
+    #engineSound;
+
     #smokeEmitter;
 
     #acceleration;
@@ -44,12 +43,16 @@ export class Player {
      * @param {CanvasImageSource[]} enginesIdle
      * @param {CanvasImageSource[]} enginesPowered
      * @param {CanvasImageSource} particleSmoke
+     * @param {HTMLAudioElement} engineSound
      */
-    constructor(pos, rot, ship, enginesIdle, enginesPowered, particleSmoke) {
+    constructor(pos, rot, ship, enginesIdle, enginesPowered, particleSmoke, engineSound) {
         this.#pos = pos;
         this.#ship = ship;
         this.#enginesIdle = enginesIdle;
         this.#enginesPowered = enginesPowered;
+        this.#engineSound = engineSound;
+        this.#engineSound.loop = true;
+        this.#engineSound.volume = 0.5;
         this.#smokeEmitter = new ParticleEmitter(particleSmoke, 100);
 
         this.#acceleration = new Vector(0, rot);
@@ -116,8 +119,14 @@ export class Player {
 
         if (Keyboard.keyDown.w) {
             this.#acceleration.magnitude += ACCELERATION * dt / 1000.0;
+            if (this.#engineSound.paused) {
+                this.#engineSound.play();
+            }
         } else {
             this.#acceleration.magnitude = 0;
+            if (!this.#engineSound.paused) {
+                this.#engineSound.pause();
+            }
         }
 
         if (Keyboard.keyDown.a) {

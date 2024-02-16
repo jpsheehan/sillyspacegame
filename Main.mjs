@@ -41,7 +41,7 @@ GameGame(
         });
 
         const sounds = await loadSounds({
-            // engines: "assets/engines.ogg",
+            engine: "assets/engine.ogg",
             gate: "assets/gate.ogg"
         });
 
@@ -54,7 +54,8 @@ GameGame(
             images.ship,
             enginesIdle,
             enginesPowered,
-            images.particleSmoke);
+            images.particleSmoke,
+            sounds.engine);
 
         for (let i = 0; i < 500; i++) {
             state.stars.push([Math.floor(Math.random() * width), Math.floor(Math.random() * height)])
