@@ -1,3 +1,4 @@
+import { GameController } from "./GameController.mjs";
 import { Gate } from "./Gate.mjs";
 import { Player } from "./Player.mjs";
 import { Point } from "./Point.mjs";
@@ -7,13 +8,16 @@ export class GateManager {
     #player;
     #gate;
     #previousPos;
+    #gameController;
 
     /**
      * 
      * @param {Player} player 
+     * @param {GameController} gameController
      */
-    constructor(player) {
+    constructor(player, gameController) {
         this.#player = player;
+        this.#gameController = gameController;
         this.#gate = this.#createRandomGate();
         this.#previousPos = this.#player.pos;
     }
@@ -23,10 +27,12 @@ export class GateManager {
      * @returns {Gate}
      */
     #createRandomGate() {
+        const gap = Math.max(200 - this.#gameController.gatesCleared * 2, 50);
+        console.log(gap)
         return new Gate(new Point(
             Math.random() * 600 + 100,
             Math.random() * 400 + 100),
-            200,
+            gap,
             Math.random() * Math.PI * 2);
     }
 
@@ -37,10 +43,6 @@ export class GateManager {
      */
     render(ctx, time) {
         this.#gate.render(ctx, time);
-        if (this.#lastIntersection) {
-            ctx.fillStyle = "#ff0000";
-            ctx.fillRect(this.#lastIntersection.x - 5, this.#lastIntersection.y - 5, 10, 10)
-        }
     }
 
     /**
@@ -50,13 +52,12 @@ export class GateManager {
      */
     update(time, dt) {
         if (!this.#player.justTeleported && this.intersects(this.#gate.a, this.#gate.b, this.#player.pos, this.#previousPos)) {
+            this.#gameController.incrementTime();
             this.#gate = this.#createRandomGate();
         }
 
         this.#previousPos = this.#player.pos.clone();
     }
-
-    #lastIntersection;
 
     /**
      * 

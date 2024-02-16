@@ -3,6 +3,7 @@ import { Player } from "./Player.mjs";
 import { Size } from "./Size.mjs";
 import { Point } from "./Point.mjs";
 import { GateManager } from "./GateManager.mjs";
+import { GameController } from "./GameController.mjs";
 
 const state = {
     /** @type {Player} */
@@ -15,6 +16,9 @@ const state = {
 
     /** @type {GateManager} */
     gateManager: null,
+
+    /** @type {GameController} */
+    gameController: null,
 
     /** @type {[number, number][]} */
     stars: []
@@ -49,7 +53,9 @@ GameGame(
             state.stars.push([Math.floor(Math.random() * width), Math.floor(Math.random() * height)])
         }
 
-        state.gateManager = new GateManager(state.player);
+        state.gameController = new GameController();
+        state.gateManager = new GateManager(state.player, state.gameController);
+
     },
     (time) => {
         // update
@@ -58,6 +64,7 @@ GameGame(
 
         state.player.update(time, dt);
         state.gateManager.update(time, dt);
+        state.gameController.update(time, dt);
     },
     (ctx, time) => {
         // render
@@ -74,4 +81,5 @@ GameGame(
         ctx.globalAlpha = 1.0;
         state.player.render(ctx, time);
         state.gateManager.render(ctx, time);
+        state.gameController.render(ctx, time);
     });
