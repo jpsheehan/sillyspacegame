@@ -2,22 +2,20 @@
 
 /**
  * Creates and starts a new GameGame.
- * @param {{ canvasId: string, images: {[key: string]: string} }} options 
+ * @param {{ canvasId: string }} options 
  * @param {(root: Element, images: {[key: string]: CanvasImageSource}) => Promise<void>} init 
  * @param {(timeMs: number) => void} update 
  * @param {(ctx: CanvasRenderingContext2D, timeMs: number) => void} render 
  */
 export async function GameGame(options, init, update, render) {
-    const { canvasId, images } = options;
+    const { canvasId } = options;
 
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext("2d");
 
     initKeyboard();
 
-    const loadedImages = await loadImages(images);
-
-    await init(canvas, loadedImages);
+    await init(canvas);
 
     window.setInterval(() => internalUpdate(), 1000.0 / 60.0);
     window.requestAnimationFrame((t) => internalRender(t));
@@ -32,29 +30,6 @@ export async function GameGame(options, init, update, render) {
         update(now);
     }
 
-    async function loadImages() {
-
-        const imagePromises = [];
-
-        for (let imageKey in images) {
-            const path = images[imageKey];
-
-            const img = new Image();
-            img.src = path;
-            imagePromises.push(new Promise((resolve, reject) => {
-                img.addEventListener("load", () => { resolve([imageKey, img]); });
-                img.addEventListener("error", () => reject());
-            }));
-        }
-
-        const completedImages = {};
-        for (let completedImage of await Promise.all(imagePromises)) {
-            const [key, img] = completedImage;
-            completedImages[key] = img;
-        }
-
-        return completedImages;
-    }
 
     function initKeyboard() {
         const keyMap = {
@@ -160,4 +135,28 @@ export async function createSpriteFrames(image, rows, cols) {
  */
 export function getFrameIndex(numberOfFrames, timeMillis, framesPerSecond) {
     return Math.floor(timeMillis / 1000.0 * framesPerSecond) % numberOfFrames;
+}
+
+export async function loadImages(images) {
+
+    const imagePromises = [];
+
+    for (let imageKey in images) {
+        const path = images[imageKey];
+
+        const img = new Image();
+        img.src = path;
+        imagePromises.push(new Promise((resolve, reject) => {
+            img.addEventListener("load", () => { resolve([imageKey, img]); });
+            img.addEventListener("error", () => reject());
+        }));
+    }
+
+    const completedImages = {};
+    for (let completedImage of await Promise.all(imagePromises)) {
+        const [key, img] = completedImage;
+        completedImages[key] = img;
+    }
+
+    return completedImages;
 }

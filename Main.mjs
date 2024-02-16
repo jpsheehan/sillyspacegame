@@ -1,4 +1,4 @@
-import { GameGame, createSpriteFrames } from "./GameGame.mjs";
+import { GameGame, createSpriteFrames, loadImages } from "./GameGame.mjs";
 import { Player } from "./Player.mjs";
 import { Size } from "./Size.mjs";
 import { Point } from "./Point.mjs";
@@ -26,17 +26,19 @@ const state = {
 
 GameGame(
     {
-        canvasId: "canvas", images: {
+        canvasId: "canvas"
+    },
+    async (root) => {
+        const width = parseInt(root.getAttribute("width"));
+        const height = parseInt(root.getAttribute("height"));
+        state.bounds = new Size(width, height);
+
+        const images = await loadImages({
             ship: "assets/ship.png",
             enginesIdle: "assets/engines_idle.png",
             enginesPowered: "assets/engines_powered.png",
             particleSmoke: "assets/particle_smoke.png"
-        }
-    },
-    async (root, images) => {
-        const width = parseInt(root.getAttribute("width"));
-        const height = parseInt(root.getAttribute("height"));
-        state.bounds = new Size(width, height);
+        });
 
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 1, 3);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 1, 4);
