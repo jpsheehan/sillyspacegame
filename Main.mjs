@@ -1,4 +1,4 @@
-import { GameGame, createSpriteFrames, loadImages } from "./GameGame.mjs";
+import { GameGame, createSpriteFrames, loadImages, loadSounds } from "./GameGame.mjs";
 import { Player } from "./Player.mjs";
 import { Size } from "./Size.mjs";
 import { Point } from "./Point.mjs";
@@ -40,10 +40,10 @@ GameGame(
             particleSmoke: "assets/particle_smoke.png"
         });
 
-        // const sounds = await loadSounds({
-        //     engines: "assets/engines.ogg",
-        //     gate: "assets/gate.ogg"
-        // });
+        const sounds = await loadSounds({
+            // engines: "assets/engines.ogg",
+            gate: "assets/gate.ogg"
+        });
 
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 1, 3);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 1, 4);
@@ -61,7 +61,7 @@ GameGame(
         }
 
         state.gameController = new GameController();
-        state.gateManager = new GateManager(state.player, state.gameController);
+        state.gateManager = new GateManager(state.player, state.gameController, sounds.gate);
 
     },
     (time) => {

@@ -140,56 +140,44 @@ export function getFrameIndex(numberOfFrames, timeMillis, framesPerSecond) {
 /**
  * 
  * @param {{ [key:string]: string}} images 
- * @returns {{ [key:string]: HTMLImageElement }}
+ * @returns {Promise<{ [key:string]: HTMLImageElement }>}
  */
-export async function loadImages(images) {
-
-    const imagePromises = [];
-
-    for (let imageKey in images) {
-        const path = images[imageKey];
-
-        const img = new Image();
-        img.src = path;
-        imagePromises.push(new Promise((resolve, reject) => {
-            img.addEventListener("load", () => { resolve([imageKey, img]); });
-            img.addEventListener("error", (e) => reject(e));
-        }));
-    }
-
-    const completedImages = {};
-    for (let completedImage of await Promise.all(imagePromises)) {
-        const [key, img] = completedImage;
-        completedImages[key] = img;
-    }
-
-    return completedImages;
+export function loadImages(images) {
+    return loadResources(images, (path) => { const image = new Image(); image.src = path; return image; }, "load", "error");
 }
 
 /**
  * 
  * @param {{[key: string]: string}} sounds 
- * @returns {{[key:string]: HTMLAudioElement}}
+ * @returns {Promise<{[key:string]: HTMLAudioElement}>}
  */
-export async function loadSounds(sounds) {
+export function loadSounds(sounds) {
+    return loadResources(sounds, (path) => new Audio(path), "canplaythrough", "error");
+}
 
+/**
+ * 
+ * @param {{[key: string]: string}} resources 
+ * @param {(path: string) => T} creator 
+ * @param {string} readyEvent 
+ * @param {string} errorEvent 
+ * @returns {Promise<{[key:string]: T}>}
+ */
+async function loadResources(resources, creator, readyEvent, errorEvent) {
     const promises = [];
-    for (let soundKey in sounds) {
-        const path = sounds[soundKey];
+    for (let key in resources) {
+        const path = resources[key];
 
-        const audio = new Audio(path);
+        const resource = creator(path);
         promises.push(new Promise((resolve, reject) => {
-            audio.addEventListener("load", () => resolve([soundKey, audio]));
-            audio.addEventListener("error", (e) => reject(e));
+            resource.addEventListener(readyEvent, () => resolve([key, resource]));
+            resource.addEventListener(errorEvent, (e) => reject(e));
         }));
     }
 
-    const completedSounds = {};
-
-    for (let completedSound of await Promise.all(promises)) {
-        const [key, audio] = completedSound;
-        completedSounds[key] = audio;
+    const resourceMap = {};
+    for (let [key, resource] of await Promise.all(promises)) {
+        resourceMap[key] = resource;
     }
-
-    return completedSounds;
+    return resourceMap; 
 }

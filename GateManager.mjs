@@ -9,15 +9,19 @@ export class GateManager {
     #gate;
     #previousPos;
     #gameController;
+    #gateSound;
 
     /**
      * 
      * @param {Player} player 
      * @param {GameController} gameController
+     * @param {HTMLAudioElement} gateSound
      */
-    constructor(player, gameController) {
+    constructor(player, gameController, gateSound) {
         this.#player = player;
         this.#gameController = gameController;
+        this.#gateSound = gateSound;
+
         this.#gate = this.#createRandomGate();
         this.#previousPos = this.#player.pos;
     }
@@ -28,7 +32,7 @@ export class GateManager {
      */
     #createRandomGate() {
         const gap = Math.max(200 - this.#gameController.gatesCleared * 2, 50);
-        console.log(gap)
+        // another opportunity to remove the hardcoded canvas size
         return new Gate(new Point(
             Math.random() * 600 + 100,
             Math.random() * 400 + 100),
@@ -53,6 +57,7 @@ export class GateManager {
     update(time, dt) {
         if (!this.#player.justTeleported && this.intersects(this.#gate.a, this.#gate.b, this.#player.pos, this.#previousPos)) {
             this.#gameController.incrementTime();
+            this.#gateSound.play();
             this.#gate = this.#createRandomGate();
         }
 
