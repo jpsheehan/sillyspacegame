@@ -137,6 +137,11 @@ export function getFrameIndex(numberOfFrames, timeMillis, framesPerSecond) {
     return Math.floor(timeMillis / 1000.0 * framesPerSecond) % numberOfFrames;
 }
 
+/**
+ * 
+ * @param {{ [key:string]: string}} images 
+ * @returns {{ [key:string]: HTMLImageElement }}
+ */
 export async function loadImages(images) {
 
     const imagePromises = [];
@@ -148,7 +153,7 @@ export async function loadImages(images) {
         img.src = path;
         imagePromises.push(new Promise((resolve, reject) => {
             img.addEventListener("load", () => { resolve([imageKey, img]); });
-            img.addEventListener("error", () => reject());
+            img.addEventListener("error", (e) => reject(e));
         }));
     }
 
@@ -159,4 +164,32 @@ export async function loadImages(images) {
     }
 
     return completedImages;
+}
+
+/**
+ * 
+ * @param {{[key: string]: string}} sounds 
+ * @returns {{[key:string]: HTMLAudioElement}}
+ */
+export async function loadSounds(sounds) {
+
+    const promises = [];
+    for (let soundKey in sounds) {
+        const path = sounds[soundKey];
+
+        const audio = new Audio(path);
+        promises.push(new Promise((resolve, reject) => {
+            audio.addEventListener("load", () => resolve([soundKey, audio]));
+            audio.addEventListener("error", (e) => reject(e));
+        }));
+    }
+
+    const completedSounds = {};
+
+    for (let completedSound of await Promise.all(promises)) {
+        const [key, audio] = completedSound;
+        completedSounds[key] = audio;
+    }
+
+    return completedSounds;
 }

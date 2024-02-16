@@ -40,6 +40,11 @@ GameGame(
             particleSmoke: "assets/particle_smoke.png"
         });
 
+        // const sounds = await loadSounds({
+        //     engines: "assets/engines.ogg",
+        //     gate: "assets/gate.ogg"
+        // });
+
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 1, 3);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 1, 4);
 
