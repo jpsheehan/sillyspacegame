@@ -33,6 +33,7 @@ export class Player {
 
     #acceleration;
     #velocity;
+    #justTeleported;
 
     // static #coefficientOfFriction = 1;
 
@@ -53,9 +54,12 @@ export class Player {
 
         this.#acceleration = new Vector(0, rot);
         this.#velocity = new Vector(0, 0);
+        this.#justTeleported = false;
     }
 
     get pos() { return this.#pos; }
+
+    get justTeleported() { return this.#justTeleported }
 
     /**
      * 
@@ -108,6 +112,8 @@ export class Player {
      * @param {number} dt 
      */
     update(time, dt) {
+        this.#justTeleported = false;
+
         if (Keyboard.keyDown.w) {
             this.#acceleration.magnitude += ACCELERATION * dt / 1000.0;
         } else {
@@ -132,14 +138,18 @@ export class Player {
         // TODO: replace with actual width and height of window
         if (this.#pos.x < 0) {
             this.#pos.x += 800;
+            this.#justTeleported = true;
         } else if (this.#pos.x >= 800) {
             this.#pos.x -= 800;
+            this.#justTeleported = true;
         }
 
         if (this.#pos.y < 0) {
             this.#pos.y += 600;
+            this.#justTeleported = true;
         } else if (this.#pos.y >= 600) {
             this.#pos.y -= 600;
+            this.#justTeleported = true;
         }
 
         if ((this.#acceleration.magnitude > 0) && (Math.floor(time / 10) % 2 === 0)) {

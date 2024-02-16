@@ -2,6 +2,7 @@ import { GameGame, createSpriteFrames } from "./GameGame.mjs";
 import { Player } from "./Player.mjs";
 import { Size } from "./Size.mjs";
 import { Point } from "./Point.mjs";
+import { GateManager } from "./GateManager.mjs";
 
 const state = {
     /** @type {Player} */
@@ -12,6 +13,10 @@ const state = {
 
     lastTime: 0,
 
+    /** @type {GateManager} */
+    gateManager: null,
+
+    /** @type {[number, number][]} */
     stars: []
 };
 
@@ -43,6 +48,8 @@ GameGame(
         for (let i = 0; i < 500; i++) {
             state.stars.push([Math.floor(Math.random() * width), Math.floor(Math.random() * height)])
         }
+
+        state.gateManager = new GateManager(state.player);
     },
     (time) => {
         // update
@@ -50,12 +57,13 @@ GameGame(
         state.lastTime = time;
 
         state.player.update(time, dt);
+        state.gateManager.update(time, dt);
     },
     (ctx, time) => {
         // render
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, state.bounds.w, state.bounds.h);
-        
+
         ctx.fillStyle = "#ffffff";
         for (let i = 0; i < state.stars.length; i++) {
             const [x, y] = state.stars[i];
@@ -65,4 +73,5 @@ GameGame(
 
         ctx.globalAlpha = 1.0;
         state.player.render(ctx, time);
+        state.gateManager.render(ctx, time);
     });
