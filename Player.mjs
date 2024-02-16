@@ -49,7 +49,7 @@ export class Player {
         this.#ship = ship;
         this.#enginesIdle = enginesIdle;
         this.#enginesPowered = enginesPowered;
-        this.#smokeEmitter = new ParticleEmitter(particleSmoke, 30);
+        this.#smokeEmitter = new ParticleEmitter(particleSmoke, 100);
 
         this.#acceleration = new Vector(0, rot);
         this.#velocity = new Vector(0, 0);
@@ -78,7 +78,15 @@ export class Player {
 
         renderShipAt(this.#pos.x, this.#pos.y);
 
-        // toroidal rendering (small bug here, we render at most 3 images total, need 4. corner-cases amirite?!)
+        if ((this.#pos.x < this.#ship.width / 2) &&
+            (this.#pos.y < this.#ship.height / 2)) {
+            renderShipAt(this.#pos.x + 800, this.#pos.y + 600);
+        } else if (
+            (800 - this.#pos.x < this.#ship.width / 2) &&
+            (600 - this.#pos.y < this.#ship.height / 2)) {
+            renderShipAt(this.#pos.x - 800, this.#pos.y - 600);
+        }
+
         if (this.#pos.x < this.#ship.width / 2) {
             renderShipAt(this.#pos.x + 800, this.#pos.y);
         } else if (800 - this.#pos.x < this.#ship.width / 2) {
@@ -101,25 +109,15 @@ export class Player {
      */
     update(time, dt) {
         if (Keyboard.keyDown.w) {
-            // move forward
             this.#acceleration.magnitude += ACCELERATION * dt / 1000.0;
-        } else if (Keyboard.keyDown.s) {
-            // move backward
-            this.#velocity.magnitude -= BRAKING * dt / 1000.0;
         } else {
             this.#acceleration.magnitude = 0;
         }
 
         if (Keyboard.keyDown.a) {
-            // rotate counter-clockwise
             this.#acceleration.direction += TURNING_POWER * dt / 1000.0;
         } else if (Keyboard.keyDown.d) {
-            // rotate clockwise
             this.#acceleration.direction -= TURNING_POWER * dt / 1000.0;
-        }
-
-        if (Keyboard.keyDown.space) {
-            // shoot
         }
 
         this.#acceleration.magnitude = clamp(this.#acceleration.magnitude, 0, MAX_ACCELERATION);
@@ -144,8 +142,21 @@ export class Player {
             this.#pos.y -= 600;
         }
 
-        if (this.#acceleration.magnitude > 0 && Math.floor(time / 10) % 2 === 0) {
-            this.#smokeEmitter.emit(this.#pos.x + (Math.random() - 0.5) * 10, this.#pos.y + (Math.random() - 0.5) * 10, 1000 + Math.random() * 500);
+        if (this.#acceleration.magnitude > 0 && Math.floor(time / 10) % 3 === 0) {
+            const randomDeviation = 3;
+            const minLifetime = 500;
+            const maxLifetime = 1500;
+            const distanceFromCenter = 20;
+            const radiansFromCenterLine = 0.3;
+
+            this.#smokeEmitter.emit(
+                this.#pos.x - Math.cos(this.#acceleration.direction - radiansFromCenterLine) * distanceFromCenter + (Math.random() - 0.5) * 2 * randomDeviation,
+                this.#pos.y + Math.sin(this.#acceleration.direction - radiansFromCenterLine) * distanceFromCenter + (Math.random() - 0.5) * 2 * randomDeviation,
+                minLifetime + Math.random() * (maxLifetime - minLifetime));
+            this.#smokeEmitter.emit(
+                this.#pos.x - Math.cos(this.#acceleration.direction + radiansFromCenterLine) * distanceFromCenter + (Math.random() - 0.5) * 2 * randomDeviation,
+                this.#pos.y + Math.sin(this.#acceleration.direction + radiansFromCenterLine) * distanceFromCenter + (Math.random() - 0.5) * 2 * randomDeviation,
+                minLifetime + Math.random() * (maxLifetime - minLifetime));
         }
 
         this.#smokeEmitter.update(time, dt);
