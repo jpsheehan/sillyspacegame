@@ -64,16 +64,31 @@ export class Player {
     render(ctx, time) {
         const fps = 5;
         const angle = -this.#acceleration.direction + Math.PI / 2;
-        drawImageCentered(ctx, this.#ship, this.#pos.x, this.#pos.y, angle);
-        if (this.#acceleration.magnitude == 0) {
-            const index = getFrameIndex(this.#enginesIdle.length, time, fps);
-            drawImageCentered(ctx, this.#enginesIdle[index], this.#pos.x, this.#pos.y, angle);
-        } else {
-            const index = getFrameIndex(this.#enginesPowered.length, time, fps);
-            drawImageCentered(ctx, this.#enginesPowered[index], this.#pos.x, this.#pos.y, angle);
-            if (Math.floor(time / 10) % 2 === 0) {
-                this.#smokeEmitter.emit(this.#pos.x + (Math.random() - 0.5) * 10, this.#pos.y + (Math.random() - 0.5) * 10, 1000 + Math.random() * 500);
+
+        const renderShipAt = (x, y) => {
+            drawImageCentered(ctx, this.#ship, x, y, angle);
+            if (this.#acceleration.magnitude == 0) {
+                const index = getFrameIndex(this.#enginesIdle.length, time, fps);
+                drawImageCentered(ctx, this.#enginesIdle[index], x, y, angle);
+            } else {
+                const index = getFrameIndex(this.#enginesPowered.length, time, fps);
+                drawImageCentered(ctx, this.#enginesPowered[index], x, y, angle);
             }
+        }
+
+        renderShipAt(this.#pos.x, this.#pos.y);
+
+        // toroidal rendering (small bug here, we render at most 3 images total, need 4. corner-cases amirite?!)
+        if (this.#pos.x < this.#ship.width / 2) {
+            renderShipAt(this.#pos.x + 800, this.#pos.y);
+        } else if (800 - this.#pos.x < this.#ship.width / 2) {
+            renderShipAt(this.#pos.x - 800, this.#pos.y);
+        }
+
+        if (this.#pos.y < this.#ship.height / 2) {
+            renderShipAt(this.#pos.x, this.#pos.y + 600);
+        } else if (600 - this.#pos.y < this.#ship.height / 2) {
+            renderShipAt(this.#pos.x, this.#pos.y - 600);
         }
 
         this.#smokeEmitter.render(ctx, time);
@@ -115,12 +130,23 @@ export class Player {
         this.#pos.x += this.#velocity.magnitude * Math.cos(this.#velocity.direction);
         this.#pos.y -= this.#velocity.magnitude * Math.sin(this.#velocity.direction);
 
-        // TODO: Fix
-        if (this.#pos.y < 0 || this.#pos.y >= 600 - this.#ship.height) {
-            this.#acceleration.magnitude = 0;
-            this.#velocity.magnitude = 0;
+        // toroidal wrapping
+        // TODO: replace with actual width and height of window
+        if (this.#pos.x < 0) {
+            this.#pos.x += 800;
+        } else if (this.#pos.x >= 800) {
+            this.#pos.x -= 800;
         }
-        this.#pos.y = clamp(this.#pos.y, 0, 600 - this.#ship.height);
+
+        if (this.#pos.y < 0) {
+            this.#pos.y += 600;
+        } else if (this.#pos.y >= 600) {
+            this.#pos.y -= 600;
+        }
+
+        if (this.#acceleration.magnitude > 0 && Math.floor(time / 10) % 2 === 0) {
+            this.#smokeEmitter.emit(this.#pos.x + (Math.random() - 0.5) * 10, this.#pos.y + (Math.random() - 0.5) * 10, 1000 + Math.random() * 500);
+        }
 
         this.#smokeEmitter.update(time, dt);
     }
