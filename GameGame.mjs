@@ -19,7 +19,7 @@ export async function GameGame(options, init, update, render) {
 
     await init(canvas, loadedImages);
 
-    window.setInterval(() => internalUpdate(), 1.0 / 60.0);
+    window.setInterval(() => internalUpdate(), 1000.0 / 60.0);
     window.requestAnimationFrame((t) => internalRender(t));
 
     function internalRender(t) {

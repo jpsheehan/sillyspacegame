@@ -3,10 +3,26 @@ import { Vector } from "./Vector.mjs";
 import { Keyboard, clamp, drawImageCentered, getFrameIndex } from "./GameGame.mjs";
 import { ParticleEmitter } from "./ParticleEmitter.mjs";
 
-const ACCELERATION = 0.1;
-const MAX_ACCELERATION = 1.0;
+/**
+ * px/s^2
+ */
+const ACCELERATION = 1;
+const MAX_ACCELERATION = 2;
 
-const BRAKING = 1;
+/**
+ * px/s
+ */
+const MAX_VELOCITY = 8;
+
+/**
+ * rad/s
+ */
+const TURNING_POWER = 4;
+
+/**
+ * px/s
+ */
+const BRAKING = 10;
 
 export class Player {
     #pos;
@@ -81,16 +97,10 @@ export class Player {
 
         if (Keyboard.keyDown.a) {
             // rotate counter-clockwise
-            this.#acceleration.direction += 2 * dt / 1000.0;
+            this.#acceleration.direction += TURNING_POWER * dt / 1000.0;
         } else if (Keyboard.keyDown.d) {
             // rotate clockwise
-            this.#acceleration.direction -= 2 * dt / 1000.0;
-        }
-
-        if (Keyboard.keyDown.a) {
-            // strafe left
-        } else if (Keyboard.keyDown.d) {
-            // strafe right
+            this.#acceleration.direction -= TURNING_POWER * dt / 1000.0;
         }
 
         if (Keyboard.keyDown.space) {
@@ -100,7 +110,7 @@ export class Player {
         this.#acceleration.magnitude = clamp(this.#acceleration.magnitude, 0, MAX_ACCELERATION);
 
         this.#velocity = this.#velocity.add(this.#acceleration);
-        this.#velocity.magnitude = clamp(this.#velocity.magnitude, 0, 1);
+        this.#velocity.magnitude = clamp(this.#velocity.magnitude, 0, MAX_VELOCITY);
 
         this.#pos.x += this.#velocity.magnitude * Math.cos(this.#velocity.direction);
         this.#pos.y -= this.#velocity.magnitude * Math.sin(this.#velocity.direction);
