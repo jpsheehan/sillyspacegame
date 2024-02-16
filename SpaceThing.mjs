@@ -32,7 +32,13 @@ GameGame(
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 1, 3);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 1, 4);
 
-        state.player = new Player(new Point(width / 2, height / 2), Math.random() * 2 * Math.PI, images.ship, enginesIdle, enginesPowered, images.particleSmoke);
+        state.player = new Player(
+            new Point(width / 2, height / 2),
+            Math.random() * 2 * Math.PI,
+            images.ship,
+            enginesIdle,
+            enginesPowered,
+            images.particleSmoke);
 
         for (let i = 0; i < 500; i++) {
             state.stars.push([Math.floor(Math.random() * width), Math.floor(Math.random() * height)])

@@ -142,7 +142,7 @@ export class Player {
             this.#pos.y -= 600;
         }
 
-        if (this.#acceleration.magnitude > 0 && Math.floor(time / 10) % 3 === 0) {
+        if ((this.#acceleration.magnitude > 0) && (Math.floor(time / 10) % 2 === 0)) {
             const randomDeviation = 3;
             const minLifetime = 500;
             const maxLifetime = 1500;
