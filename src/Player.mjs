@@ -144,7 +144,6 @@ export class Player {
         this.#pos.y -= this.#velocity.magnitude * Math.sin(this.#velocity.direction);
 
         // toroidal wrapping
-        // TODO: replace with actual width and height of window
         if (this.#pos.x < 0) {
             this.#pos.x += CanvasSize.w;
             this.#justTeleported = true;

@@ -33,7 +33,6 @@ export class GateManager {
      */
     #createRandomGate() {
         const gap = Math.max(200 - this.#gameController.gatesCleared * 2, 50);
-        // another opportunity to remove the hardcoded canvas size
         return new Gate(new Point(
             Math.random() * (CanvasSize.w - 200) + 100,
             Math.random() * (CanvasSize.h - 200) + 100),
