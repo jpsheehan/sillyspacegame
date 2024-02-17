@@ -17,6 +17,8 @@ export async function GameGame(options, init, update, render) {
 
     await init(canvas);
 
+    let lastTime = performance.now();
+
     window.setInterval(() => internalUpdate(), 1000.0 / 60.0);
     window.requestAnimationFrame((t) => internalRender(t));
 
@@ -27,9 +29,11 @@ export async function GameGame(options, init, update, render) {
 
     function internalUpdate() {
         const now = performance.now();
-        update(now);
-    }
+        const dt = time - lastTime;
+        lastTime = time;
 
+        update(now, dt);
+    }
 
     function initKeyboard() {
         const keyMap = {

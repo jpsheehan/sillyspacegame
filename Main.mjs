@@ -4,6 +4,7 @@ import { Size } from "./Size.mjs";
 import { Point } from "./Point.mjs";
 import { GateManager } from "./GateManager.mjs";
 import { GameController } from "./GameController.mjs";
+import { Starfield } from "./Starfield.mjs";
 
 const state = {
     /** @type {Player} */
@@ -20,8 +21,8 @@ const state = {
     /** @type {GameController} */
     gameController: null,
 
-    /** @type {[number, number][]} */
-    stars: []
+    /** @type {Starfield} */
+    starfield: []
 };
 
 GameGame(
@@ -57,36 +58,20 @@ GameGame(
             images.particleSmoke,
             sounds.engine);
 
-        for (let i = 0; i < 500; i++) {
-            state.stars.push([Math.floor(Math.random() * width), Math.floor(Math.random() * height)])
-        }
-
         state.gameController = new GameController();
         state.gateManager = new GateManager(state.player, state.gameController, sounds.gate);
-
+        state.starfield = new Starfield(500, state.bounds);
     },
-    (time) => {
+    (time, dt) => {
         // update
-        const dt = time - state.lastTime;
-        state.lastTime = time;
-
+        state.starfield.update(time, dt);
         state.player.update(time, dt);
         state.gateManager.update(time, dt);
         state.gameController.update(time, dt);
     },
     (ctx, time) => {
         // render
-        ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, state.bounds.w, state.bounds.h);
-
-        ctx.fillStyle = "#ffffff";
-        for (let i = 0; i < state.stars.length; i++) {
-            const [x, y] = state.stars[i];
-            ctx.globalAlpha = Math.random() * 0.5 + i / state.stars.length;
-            ctx.fillRect(x, y, 1, 1);
-        }
-
-        ctx.globalAlpha = 1.0;
+        state.starfield.render(ctx, time);
         state.player.render(ctx, time);
         state.gateManager.render(ctx, time);
         state.gameController.render(ctx, time);
