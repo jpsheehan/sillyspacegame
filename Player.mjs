@@ -21,7 +21,7 @@ const TURNING_POWER = 4;
 
 export class Player {
     #pos;
-    
+
     #ship;
     #enginesIdle;
     #enginesPowered;
@@ -33,6 +33,8 @@ export class Player {
     #acceleration;
     #velocity;
     #justTeleported;
+
+    #autopilot;
 
     // static #coefficientOfFriction = 1;
 
@@ -54,6 +56,7 @@ export class Player {
         this.#engineSound.loop = true;
         this.#engineSound.volume = 0.5;
         this.#smokeEmitter = new ParticleEmitter(particleSmoke, 100);
+        this.#autopilot = true;
 
         this.#acceleration = new Vector(0, rot);
         this.#velocity = new Vector(0, 0);
@@ -117,7 +120,23 @@ export class Player {
     update(time, dt) {
         this.#justTeleported = false;
 
-        if (Keyboard.keyDown.w) {
+        let accelerate = false, rotateCw = false, rotateCcw = false;
+
+        if (this.#autopilot) {
+
+        } else {
+            if (Keyboard.keyDown.w) {
+                accelerate = true;
+            }
+
+            if (Keyboard.keyDown.a) {
+                rotateCcw = true;
+            } else if (Keyboard.keyDown.d) {
+                rotateCw = true;
+            }
+        }
+
+        if (accelerate) {
             this.#acceleration.magnitude += ACCELERATION * dt / 1000.0;
             if (this.#engineSound.paused) {
                 this.#engineSound.play();
@@ -129,10 +148,11 @@ export class Player {
             }
         }
 
-        if (Keyboard.keyDown.a) {
-            this.#acceleration.direction += TURNING_POWER * dt / 1000.0;
-        } else if (Keyboard.keyDown.d) {
+        if (rotateCw) {
             this.#acceleration.direction -= TURNING_POWER * dt / 1000.0;
+        }
+        if (rotateCcw) {
+            this.#acceleration.direction += TURNING_POWER * dt / 1000.0;
         }
 
         this.#acceleration.magnitude = clamp(this.#acceleration.magnitude, 0, MAX_ACCELERATION);
