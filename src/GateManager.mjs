@@ -1,4 +1,5 @@
 import { GameController } from "./GameController.mjs";
+import { CanvasSize } from "./GameGame.mjs";
 import { Gate } from "./Gate.mjs";
 import { Player } from "./Player.mjs";
 import { Point } from "./Point.mjs";
@@ -34,8 +35,8 @@ export class GateManager {
         const gap = Math.max(200 - this.#gameController.gatesCleared * 2, 50);
         // another opportunity to remove the hardcoded canvas size
         return new Gate(new Point(
-            Math.random() * 600 + 100,
-            Math.random() * 400 + 100),
+            Math.random() * (CanvasSize.w - 200) + 100,
+            Math.random() * (CanvasSize.h - 200) + 100),
             gap,
             Math.random() * Math.PI * 2);
     }

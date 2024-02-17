@@ -1,3 +1,5 @@
+import { CanvasSize } from "./GameGame.mjs";
+
 export class GameController {
     #timeRemaining;
     #gatesCleared;
@@ -26,7 +28,7 @@ export class GameController {
         ctx.font = "bold 32px sans-serif";
 
         const dimensions = ctx.measureText(text);
-        ctx.fillText(text, (800 - dimensions.width) / 2, dimensions.fontBoundingBoxAscent);
+        ctx.fillText(text, (CanvasSize.w - dimensions.width) / 2, dimensions.fontBoundingBoxAscent);
     }
 
     /**

@@ -1,16 +1,23 @@
 "use strict";
 
+import { Size } from "./Size.mjs";
+
 /**
  * Creates and starts a new GameGame.
- * @param {{ canvasId: string }} options 
+ * @param {{ canvasId: string, width: number, height: number }} options 
  * @param {(root: Element, images: {[key: string]: CanvasImageSource}) => Promise<void>} init 
  * @param {(timeMs: number) => void} update 
  * @param {(ctx: CanvasRenderingContext2D, timeMs: number) => void} render 
  */
 export async function GameGame(options, init, update, render) {
-    const { canvasId } = options;
+    const { canvasId, width, height } = options;
 
     const canvas = document.getElementById(canvasId);
+    canvas.setAttribute("width", width);
+    canvas.setAttribute("height", height);
+
+    CanvasSize = new Size(width, height);
+
     const ctx = canvas.getContext("2d");
 
     initKeyboard();
@@ -49,7 +56,6 @@ export async function GameGame(options, init, update, render) {
             if (keyMap[evt.code]) {
                 evt.preventDefault();
                 const key = keyMap[evt.code];
-                Keyboard.keyUp[key] = false;
                 Keyboard.keyDown[key] = true;
             }
         });
@@ -58,7 +64,6 @@ export async function GameGame(options, init, update, render) {
             if (keyMap[evt.code]) {
                 evt.preventDefault();
                 const key = keyMap[evt.code];
-                Keyboard.keyUp[key] = true;
                 Keyboard.keyDown[key] = false;
             }
         });
@@ -75,18 +80,18 @@ export const Keyboard = {
         q: false,
         e: false,
         space: false
-    },
-    keyUp: {
-        w: false,
-        a: false,
-        s: false,
-        d: false,
-        q: false,
-        e: false,
-        space: false
     }
 };
 
+export let CanvasSize = null;
+
+/**
+ * 
+ * @param {number} x 
+ * @param {number} min 
+ * @param {number} max 
+ * @returns 
+ */
 export function clamp(x, min, max) {
     if (x < min) return min;
     if (x > max) return max;

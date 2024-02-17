@@ -1,6 +1,6 @@
 import { Point } from "./Point.mjs";
 import { Vector } from "./Vector.mjs";
-import { Keyboard, clamp, drawImageCentered, getFrameIndex } from "./GameGame.mjs";
+import { CanvasSize, Keyboard, clamp, drawImageCentered, getFrameIndex } from "./GameGame.mjs";
 import { ParticleEmitter } from "./ParticleEmitter.mjs";
 
 /**
@@ -87,23 +87,23 @@ export class Player {
 
         if ((this.#pos.x < this.#ship.width / 2) &&
             (this.#pos.y < this.#ship.height / 2)) {
-            renderShipAt(this.#pos.x + 800, this.#pos.y + 600);
+            renderShipAt(this.#pos.x + CanvasSize.w, this.#pos.y + CanvasSize.h);
         } else if (
-            (800 - this.#pos.x < this.#ship.width / 2) &&
-            (600 - this.#pos.y < this.#ship.height / 2)) {
-            renderShipAt(this.#pos.x - 800, this.#pos.y - 600);
+            (CanvasSize.w - this.#pos.x < this.#ship.width / 2) &&
+            (CanvasSize.h - this.#pos.y < this.#ship.height / 2)) {
+            renderShipAt(this.#pos.x - CanvasSize.w, this.#pos.y - CanvasSize.h);
         }
 
         if (this.#pos.x < this.#ship.width / 2) {
-            renderShipAt(this.#pos.x + 800, this.#pos.y);
-        } else if (800 - this.#pos.x < this.#ship.width / 2) {
-            renderShipAt(this.#pos.x - 800, this.#pos.y);
+            renderShipAt(this.#pos.x + CanvasSize.w, this.#pos.y);
+        } else if (CanvasSize.w - this.#pos.x < this.#ship.width / 2) {
+            renderShipAt(this.#pos.x - CanvasSize.w, this.#pos.y);
         }
 
         if (this.#pos.y < this.#ship.height / 2) {
-            renderShipAt(this.#pos.x, this.#pos.y + 600);
-        } else if (600 - this.#pos.y < this.#ship.height / 2) {
-            renderShipAt(this.#pos.x, this.#pos.y - 600);
+            renderShipAt(this.#pos.x, this.#pos.y + CanvasSize.h);
+        } else if (CanvasSize.h - this.#pos.y < this.#ship.height / 2) {
+            renderShipAt(this.#pos.x, this.#pos.y - CanvasSize.h);
         }
 
         this.#smokeEmitter.render(ctx, time);
@@ -146,18 +146,18 @@ export class Player {
         // toroidal wrapping
         // TODO: replace with actual width and height of window
         if (this.#pos.x < 0) {
-            this.#pos.x += 800;
+            this.#pos.x += CanvasSize.w;
             this.#justTeleported = true;
-        } else if (this.#pos.x >= 800) {
-            this.#pos.x -= 800;
+        } else if (this.#pos.x >= CanvasSize.w) {
+            this.#pos.x -= CanvasSize.w;
             this.#justTeleported = true;
         }
 
         if (this.#pos.y < 0) {
-            this.#pos.y += 600;
+            this.#pos.y += CanvasSize.h;
             this.#justTeleported = true;
-        } else if (this.#pos.y >= 600) {
-            this.#pos.y -= 600;
+        } else if (this.#pos.y >= CanvasSize.h) {
+            this.#pos.y -= CanvasSize.h;
             this.#justTeleported = true;
         }
 

@@ -1,6 +1,7 @@
 
 export class Size {
-    #w; #h;
+    #w;
+    #h;
 
     /**
      * @param {number} w The width.
@@ -11,11 +12,6 @@ export class Size {
         this.#h = h;
     }
 
-    get w() {
-        return this.#w;
-    }
-
-    get h() {
-        return this.#h;
-    }
+    get w() { return this.#w; }
+    get h() { return this.#h; }
 }
