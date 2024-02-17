@@ -22,11 +22,14 @@ export async function GameGame(options, init, update, render) {
 
     initKeyboard();
 
+    const fps = Math.round(await getFPS());
+    console.log(`Running at ${fps} FPS`)
+
     await init(canvas);
 
     let lastTime = performance.now();
 
-    window.setInterval(() => internalUpdate(), 1000.0 / 60.0);
+    window.setInterval(() => internalUpdate(), 1000.0 / fps);
     window.requestAnimationFrame((t) => internalRender(t));
 
     function internalRender(t) {
@@ -67,6 +70,14 @@ export async function GameGame(options, init, update, render) {
                 Keyboard.keyDown[key] = false;
             }
         });
+    }
+
+    function getFPS() {
+        return new Promise(resolve =>
+            requestAnimationFrame(t1 =>
+                requestAnimationFrame(t2 => resolve(1000 / (t2 - t1)))
+            )
+        )
     }
 }
 
@@ -109,7 +120,7 @@ export function clamp(x, min, max) {
 export function drawImageCentered(ctx, image, x, y, angle) {
     ctx.setTransform(1, 0, 0, 1, x, y);
     ctx.rotate(angle);
-    ctx.drawImage(image, -image.width/2, -image.height/2);
+    ctx.drawImage(image, -image.width / 2, -image.height / 2);
     ctx.resetTransform();
 }
 
@@ -121,19 +132,19 @@ export function drawImageCentered(ctx, image, x, y, angle) {
 * @returns {Promise<ImageBitmap[]>}
 */
 export async function createSpriteFrames(image, rows, cols) {
-   const sw = image.width / cols;
-   const sh = image.height / rows;
+    const sw = image.width / cols;
+    const sh = image.height / rows;
 
-   const frames = [];
-   for (let row = 0; row < rows; ++row) {
-       for (let col = 0; col < cols; ++col) {
-           const sx = col * sw;
-           const sy = row * sh;
-           frames.push(createImageBitmap(image, sx, sy, sw, sh));
-       }
-   }
+    const frames = [];
+    for (let row = 0; row < rows; ++row) {
+        for (let col = 0; col < cols; ++col) {
+            const sx = col * sw;
+            const sy = row * sh;
+            frames.push(createImageBitmap(image, sx, sy, sw, sh));
+        }
+    }
 
-   return await Promise.all(frames);
+    return await Promise.all(frames);
 }
 
 /**
@@ -188,5 +199,5 @@ async function loadResources(resources, creator, readyEvent, errorEvent) {
     for (let [key, resource] of await Promise.all(promises)) {
         resourceMap[key] = resource;
     }
-    return resourceMap; 
+    return resourceMap;
 }

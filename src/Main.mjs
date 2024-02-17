@@ -26,8 +26,8 @@ const state = {
 GameGame(
     {
         canvasId: "canvas",
-        width: 800,
-        height: 600
+        width: 1024,
+        height: 768
     },
     async (root) => {
         const width = parseInt(root.getAttribute("width"));
