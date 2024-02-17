@@ -19,9 +19,9 @@ export class GameController {
     /**
      * 
      * @param {CanvasRenderingContext2D} ctx 
-     * @param {number} time 
+     * @param {number} _time
      */
-    render(ctx, time) {
+    render(ctx, _time) {
 
         const text = (this.#timeRemaining / 1000.0).toFixed(1);
         ctx.fillStyle = "#ffffff";
@@ -33,10 +33,10 @@ export class GameController {
 
     /**
      * 
-     * @param {number} time 
+     * @param {number} _time 
      * @param {number} dt 
      */
-    update(time, dt) {
+    update(_time, dt) {
         this.#timeRemaining -= dt;
     }
 }

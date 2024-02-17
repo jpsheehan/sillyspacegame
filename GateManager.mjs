@@ -8,6 +8,7 @@ export class GateManager {
 
     #player;
     #gate;
+    #nextGate;
     #previousPos;
     #gameController;
     #gateSound;
@@ -24,6 +25,8 @@ export class GateManager {
         this.#gateSound = gateSound;
 
         this.#gate = this.#createRandomGate();
+        this.#nextGate = this.#createRandomGate();
+
         this.#previousPos = this.#player.pos;
     }
 
@@ -46,19 +49,17 @@ export class GateManager {
      * @param {number} time 
      */
     render(ctx, time) {
-        this.#gate.render(ctx, time);
+        this.#gate.render(ctx, "#00ff00");
+        this.#nextGate.render(ctx, "#888888");
     }
 
-    /**
-     * 
-     * @param {number} time 
-     * @param {number} dt 
-     */
-    update(time, dt) {
+    update() {
         if (!this.#player.justTeleported && this.intersects(this.#gate.a, this.#gate.b, this.#player.pos, this.#previousPos)) {
             this.#gameController.incrementTime();
             this.#gateSound.play();
-            this.#gate = this.#createRandomGate();
+
+            this.#gate = this.#nextGate;
+            this.#nextGate = this.#createRandomGate();
         }
 
         this.#previousPos = this.#player.pos.clone();

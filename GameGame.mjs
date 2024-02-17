@@ -4,13 +4,13 @@ import { Size } from "./Size.mjs";
 
 /**
  * Creates and starts a new GameGame.
- * @param {{ canvasId: string, width: number, height: number }} options 
+ * @param {{ canvasId: string, width: number, height: number, fps?: number }} options 
  * @param {(root: Element, images: {[key: string]: CanvasImageSource}) => Promise<void>} init 
  * @param {(timeMs: number) => void} update 
  * @param {(ctx: CanvasRenderingContext2D, timeMs: number) => void} render 
  */
 export async function GameGame(options, init, update, render) {
-    const { canvasId, width, height } = options;
+    const { canvasId, width, height, fps } = options;
 
     const canvas = document.getElementById(canvasId);
     canvas.setAttribute("width", width);
@@ -22,14 +22,14 @@ export async function GameGame(options, init, update, render) {
 
     initKeyboard();
 
-    const fps = Math.round(await getFPS());
+    const chosenFps = fps ?? Math.round(await getFPS());
     console.log(`Running at ${fps} FPS`)
 
     await init(canvas);
 
     let lastTime = performance.now();
 
-    window.setInterval(() => internalUpdate(), 1000.0 / fps);
+    window.setInterval(() => internalUpdate(), 1000.0 / chosenFps);
     window.requestAnimationFrame((t) => internalRender(t));
 
     function internalRender(t) {
@@ -72,6 +72,10 @@ export async function GameGame(options, init, update, render) {
         });
     }
 
+    /**
+     * @see https://stackoverflow.com/a/44013686
+     * @returns {Promise<number>}
+     */
     function getFPS() {
         return new Promise(resolve =>
             requestAnimationFrame(t1 =>

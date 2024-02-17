@@ -25,22 +25,13 @@ export class Gate {
     /**
      * 
      * @param {CanvasRenderingContext2D} ctx 
-     * @param {number} time 
+     * @param {string} color 
      */
-    render(ctx, time) {
+    render(ctx, color) {
         const size = 10;
 
-        ctx.fillStyle = "#00ff00";
+        ctx.fillStyle = color;
         ctx.fillRect(this.#a.x - size / 2, this.#a.y - size / 2, size, size);
         ctx.fillRect(this.#b.x - size / 2, this.#b.y - size / 2, size, size);
-    }
-
-    /**
-     * 
-     * @param {number} time 
-     * @param {number} dt 
-     */
-    update(time, dt) {
-
     }
 }
