@@ -27,7 +27,8 @@ GameGame(
     {
         canvasId: "canvas",
         width: 1024,
-        height: 768
+        height: 768,
+        fps: 60
     },
     async (root) => {
         const width = parseInt(root.getAttribute("width"));

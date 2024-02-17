@@ -22,7 +22,8 @@ export async function GameGame(options, init, update, render) {
 
     initKeyboard();
 
-    const chosenFps = fps ?? Math.round(await getFPS());
+    const adaptiveFps = Math.round(await getFPS());
+    const chosenFps = Math.max(fps ?? 0, adaptiveFps);
     console.log(`Running at ${chosenFps} FPS`)
 
     await init(canvas);
