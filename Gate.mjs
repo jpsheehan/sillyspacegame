@@ -3,6 +3,7 @@ import { Point } from "./Point.mjs";
 export class Gate {
     #a;
     #b;
+    #angle;
 
     get a() { return this.#a; }
     get b() { return this.#b; }
@@ -20,6 +21,7 @@ export class Gate {
         this.#b = new Point(
             pos.x + Math.cos(angle + Math.PI / 2) * gap / 2,
             pos.y - Math.sin(angle + Math.PI / 2) * gap / 2);
+        this.#angle = angle;
     }
 
     /**
@@ -30,8 +32,12 @@ export class Gate {
     render(ctx, color) {
         const size = 10;
 
+        ctx.beginPath();
+        ctx.arc(this.#a.x, this.#a.y, size / 2, -this.#angle - Math.PI, -this.#angle, true);
+        ctx.arc(this.#b.x, this.#b.y, size / 2, -this.#angle, -this.#angle + Math.PI, true);
+        ctx.closePath();
+        
         ctx.fillStyle = color;
-        ctx.fillRect(this.#a.x - size / 2, this.#a.y - size / 2, size, size);
-        ctx.fillRect(this.#b.x - size / 2, this.#b.y - size / 2, size, size);
+        ctx.fill();
     }
 }

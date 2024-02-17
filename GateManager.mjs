@@ -49,8 +49,8 @@ export class GateManager {
      * @param {number} time 
      */
     render(ctx, time) {
-        this.#gate.render(ctx, "#00ff00");
         this.#nextGate.render(ctx, "#888888");
+        this.#gate.render(ctx, "#00ff00");
     }
 
     update() {

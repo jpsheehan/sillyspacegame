@@ -72,7 +72,7 @@ GameGame(
     (ctx, time) => {
         // render
         state.starfield.render(ctx, time);
-        state.player.render(ctx, time);
         state.gateManager.render(ctx, time);
+        state.player.render(ctx, time);
         state.gameController.render(ctx, time);
     });
