@@ -13,8 +13,6 @@ const state = {
     /** @type {Size} */
     bounds: null,
 
-    lastTime: 0,
-
     /** @type {GateManager} */
     gateManager: null,
 
@@ -22,7 +20,7 @@ const state = {
     gameController: null,
 
     /** @type {Starfield} */
-    starfield: []
+    starfield: null
 };
 
 GameGame(

@@ -28,11 +28,11 @@ export async function GameGame(options, init, update, render) {
     }
 
     function internalUpdate() {
-        const now = performance.now();
+        const time = performance.now();
         const dt = time - lastTime;
         lastTime = time;
 
-        update(now, dt);
+        update(time, dt);
     }
 
     function initKeyboard() {
