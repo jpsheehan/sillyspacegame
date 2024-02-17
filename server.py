@@ -1,6 +1,4 @@
-import http.server, os
-
-os.chdir('src')
+import http.server
 
 HandlerClass = http.server.SimpleHTTPRequestHandler
 
