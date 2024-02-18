@@ -1,4 +1,4 @@
-import { CanvasSize, drawTextCentered } from "./GameGame.mjs";
+import { CanvasSize, Keyboard, drawTextCentered } from "./GameGame.mjs";
 import { State } from "./State.mjs";
 
 export class WinScreen extends State {
@@ -9,6 +9,10 @@ export class WinScreen extends State {
                 const { starfield } = data;
 
                 starfield.update(time, dt);
+
+                if (Keyboard.keyDown.space) {
+                    stateMachine.switchTo("playing");
+                }
             }, (ctx, time2, data) => {
                 const { starfield, time, score } = data;
 
@@ -19,6 +23,7 @@ export class WinScreen extends State {
 
                 drawTextCentered(ctx, "You won!", center, middle - 100, "#ffffff", "bold 32px sans-serif");
                 drawTextCentered(ctx, `You cleared ${score} gates and survived for ${(time/1000).toFixed(0)} seconds!`, center, middle, "#ffffff", "bold 24px sans-serif");
+                drawTextCentered(ctx, "Press Space to play again", center, middle + 100, "#ffffff", "bold 24px sans-serif")
             })
     }
 }

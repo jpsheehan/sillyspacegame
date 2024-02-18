@@ -15,43 +15,48 @@ export class PlayingScreen extends State {
      * @param {object} assets
      */
     constructor(starfield, assets) {
-        const player = new Player(
-            "You",
-            new Point(CanvasSize.w / 2, CanvasSize.h / 2),
-            Math.random() * 2 * Math.PI,
-            assets.images.ship,
-            assets.sprites.enginesIdle,
-            assets.sprites.enginesPowered,
-            assets.images.particleSmoke,
-            assets.sounds.engine,
-            () => gateManager.gate);
+        super("playing", { starfield, assets },
+            (_, __, data) => {
+                const { starfield, assets } = data;
+                const player = new Player(
+                    "You",
+                    new Point(CanvasSize.w / 2, CanvasSize.h / 2),
+                    Math.random() * 2 * Math.PI,
+                    assets.images.ship,
+                    assets.sprites.enginesIdle,
+                    assets.sprites.enginesPowered,
+                    assets.images.particleSmoke,
+                    assets.sounds.engine,
+                    () => gateManager.gate);
 
-        const enemy = new Enemy(
-            "Bot",
-            new Point(Math.random() * CanvasSize.w, Math.random() * CanvasSize.h),
-            Math.random() * 2 * Math.PI,
-            assets.images.ship,
-            assets.sprites.enginesIdle,
-            assets.sprites.enginesPowered,
-            assets.images.particleSmoke,
-            assets.sounds.engine,
-            () => gateManager.gate);
+                const enemy = new Enemy(
+                    "Bot",
+                    new Point(Math.random() * CanvasSize.w, Math.random() * CanvasSize.h),
+                    Math.random() * 2 * Math.PI,
+                    assets.images.ship,
+                    assets.sprites.enginesIdle,
+                    assets.sprites.enginesPowered,
+                    assets.images.particleSmoke,
+                    assets.sounds.engine,
+                    () => gateManager.gate);
 
-        const ships = [player, enemy];
+                const ships = [player, enemy];
 
-        const gameController = new GameController(ships);
-        const gateManager = new GateManager(ships, gameController, assets.sounds.gate);
+                const gameController = new GameController(ships);
+                const gateManager = new GateManager(ships, gameController, assets.sounds.gate);
 
-        super("playing", {
-            player,
-            enemy,
-            gameController,
-            gateManager,
-            starfield
-        },
-            undefined,
+                return {
+                    player,
+                    enemy,
+                    gameController,
+                    gateManager,
+                    starfield,
+                    assets
+                }
+            },
             (time, dt, stateMachine, data) => {
                 const { player, enemy, starfield, gateManager, gameController } = data;
+                
                 starfield.update(time, dt);
                 player.update(time, dt);
                 enemy.update(time, dt);
@@ -59,13 +64,13 @@ export class PlayingScreen extends State {
                 gameController.update(time, dt);
 
                 if (gameController.isWon) {
-                    console.log(gameController)
                     stateMachine.switchTo("win", gameController.playerScore);
                 } else if (gameController.isLost) {
                     stateMachine.switchTo("lose", gameController.playerScore);
                 }
             }, (ctx, time, data) => {
                 const { player, enemy, starfield, gateManager, gameController } = data;
+
                 starfield.render(ctx, time);
                 gateManager.render(ctx, time);
                 enemy.render(ctx, time);
