@@ -7,7 +7,7 @@ import { Point } from "./Point.mjs";
 import { Starfield } from "./Starfield.mjs";
 import { State } from "./State.mjs";
 
-const NUM_ENEMIES = 2;
+const NUM_ENEMIES = 1;
 
 export class PlayingScreen extends State {
 
