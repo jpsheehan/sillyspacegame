@@ -59,7 +59,7 @@ export class GateManager {
             const ship = this.#ships[i];
             const previousPos = this.#previousPositions[i];
 
-            if (!ship.justTeleported && this.intersects(this.#gate.a, this.#gate.b, ship.pos, previousPos)) {
+            if (!ship.justTeleported && !ship.destroyed && this.intersects(this.#gate.a, this.#gate.b, ship.pos, previousPos)) {
                 this.#gameController.incrementTime(ship.shipId);
                 this.#gateSound.play();
 

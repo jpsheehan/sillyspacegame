@@ -38,6 +38,7 @@ export class Ship {
     #justTeleported;
     #shipId;
     #name;
+    #destroyed;
 
     _getGate;
 
@@ -66,6 +67,7 @@ export class Ship {
         this._acceleration = new Vector(0, rot);
         this._velocity = new Vector(0, 0);
         this.#justTeleported = false;
+        this.#destroyed = false;
 
         this.#shipId = MAX_SHIP_ID++;
     }
@@ -85,6 +87,14 @@ export class Ship {
         throw new Error("#processInput must be implemented in the subclass.")
     }
 
+    destroy() {
+        if (!this.#destroyed) {
+            this.#destroyed = true;
+        }
+    }
+
+    get destroyed() { return this.#destroyed; }
+
     /**
      * 
      * @param {CanvasRenderingContext2D} ctx 
@@ -94,6 +104,9 @@ export class Ship {
         const angle = this._acceleration.direction;
 
         const renderShipAt = (x, y) => {
+            if (this.#destroyed) {
+                ctx.globalAlpha = 0.5;
+            }
             drawImageCentered(ctx, this.#ship, x, y, angle);
             if (this._acceleration.magnitude == 0) {
                 const index = getFrameIndex(this.#enginesIdle.length, time, fps);
@@ -102,6 +115,7 @@ export class Ship {
                 const index = getFrameIndex(this.#enginesPowered.length, time, fps);
                 drawImageCentered(ctx, this.#enginesPowered[index], x, y, angle);
             }
+            ctx.globalAlpha = 1.0;
         }
 
         renderShipAt(this._pos.x, this._pos.y);
@@ -138,7 +152,7 @@ export class Ship {
     update(time, dt) {
         this.#justTeleported = false;
 
-        const { accelerate, rotateCcw, rotateCw } = this._processInput();
+        const { accelerate, rotateCcw, rotateCw } = this.#destroyed ? { accelerate: false, rotateCcw: false, rotateCw: false } : this._processInput();
 
         if (accelerate) {
             this._acceleration.magnitude += ACCELERATION * dt / 1000.0;

@@ -5,12 +5,14 @@ import { Ship } from "./Ship.mjs";
 
 export class GameController {
     #scores;
+    #totalTime;
 
     /**
      * 
      * @param {Ship[]} ships 
      */
     constructor(ships) {
+        this.#totalTime = 0;
         this.#scores = {};
         for (let ship of ships) {
             this.#scores[ship.shipId] = {
@@ -42,7 +44,7 @@ export class GameController {
 
     get playerScore() {
         const playerScore = Object.values(this.#scores).find(score => score.ship instanceof Player);
-        return { score: playerScore.gatesCleared, time: playerScore.timeRemaining };
+        return { score: playerScore.gatesCleared, time: this.#totalTime };
     }
 
     get mostGatesCleared() { return Math.max.apply(null, Object.values(this.#scores).map(score => score.gatesCleared)); }
@@ -71,12 +73,17 @@ export class GameController {
      * @param {number} dt 
      */
     update(_time, dt) {
+        this.#totalTime += dt;
+
         for (let shipId of Object.keys(this.#scores)) {
             const score = this.#scores[shipId];
+            if (!score.ship.destroyed) {
 
-            score.timeRemaining -= dt;
-            if (score.timeRemaining < 0) {
-                score.timeRemaining = 0;
+                score.timeRemaining -= dt;
+                if (score.timeRemaining < 0) {
+                    score.timeRemaining = 0;
+                    score.ship.destroy();
+                }
             }
         }
     }
