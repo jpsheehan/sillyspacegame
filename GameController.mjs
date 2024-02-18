@@ -22,7 +22,6 @@ export class GameController {
                 ship
             }
         }
-        console.log("scores", this.#scores)
     }
 
     incrementTime(shipId) {
