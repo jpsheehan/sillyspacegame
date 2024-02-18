@@ -1,4 +1,6 @@
+import { Enemy } from "./Enemy.mjs";
 import { CanvasSize, drawTextCentered } from "./GameGame.mjs";
+import { Player } from "./Player.mjs";
 import { Ship } from "./Ship.mjs";
 
 export class GameController {
@@ -14,7 +16,8 @@ export class GameController {
             this.#scores[ship.shipId] = {
                 timeRemaining: 15_000,
                 gatesCleared: 0,
-                name: ship.name
+                name: ship.name,
+                ship
             }
         }
     }
@@ -25,7 +28,23 @@ export class GameController {
         score.timeRemaining += 5_000;
     }
 
-    get mostGatesCleared() { return Math.max.apply(null, Object.keys(this.#scores).map(shipId => this.#scores[shipId].gatesCleared)); }
+    get isWon() {
+        /** @type {Enemy[]} */
+        const enemieScores = Object.values(this.#scores).filter(score => score.ship instanceof Enemy);
+        return enemieScores.every(enemyScore => enemyScore.timeRemaining <= 0);
+    }
+
+    get isLost() {
+        const playerScore = Object.values(this.#scores).find(score => score.ship instanceof Player);
+        return playerScore.timeRemaining <= 0;
+    }
+
+    get playerScore() {
+        const playerScore = Object.values(this.#scores).find(score => score.ship instanceof Player);
+        return { score: playerScore.gatesCleared, time: playerScore.timeRemaining };
+    }
+
+    get mostGatesCleared() { return Math.max.apply(null, Object.values(this.#scores).map(score => score.gatesCleared)); }
 
     /**
      * 
@@ -50,7 +69,12 @@ export class GameController {
      */
     update(_time, dt) {
         for (let shipId of Object.keys(this.#scores)) {
-            this.#scores[shipId].timeRemaining -= dt;
+            const score = this.#scores[shipId];
+
+            score.timeRemaining -= dt;
+            if (score.timeRemaining < 0) {
+                score.timeRemaining = 0;
+            }
         }
     }
 }

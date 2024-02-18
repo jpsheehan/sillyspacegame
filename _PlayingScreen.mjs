@@ -57,6 +57,13 @@ export class PlayingScreen extends State {
                 enemy.update(time, dt);
                 gateManager.update(time, dt);
                 gameController.update(time, dt);
+
+                if (gameController.isWon) {
+                    console.log(gameController)
+                    stateMachine.switchTo("win", gameController.playerScore);
+                } else if (gameController.isLost) {
+                    stateMachine.switchTo("lose", gameController.playerScore);
+                }
             }, (ctx, time, data) => {
                 const { player, enemy, starfield, gateManager, gameController } = data;
                 starfield.render(ctx, time);

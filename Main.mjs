@@ -10,6 +10,8 @@ import { StateMachine } from "./StateMachine.mjs";
 import { State } from "./State.mjs";
 import { IntroScreen } from "./_IntroScreen.mjs";
 import { PlayingScreen } from "./_PlayingScreen.mjs";
+import { WinScreen } from "./_WinScreen.mjs";
+import { LoseScreen } from "./_LoseScreen.mjs";
 
 const state = {
     /** @type {StateMachine} */
@@ -53,6 +55,8 @@ GameGame(
             [
                 new IntroScreen(starfield),
                 new PlayingScreen(starfield, assets),
+                new WinScreen(starfield),
+                new LoseScreen(starfield)
             ]
         );
     },
