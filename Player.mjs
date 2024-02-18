@@ -138,7 +138,7 @@ export class Player {
             let velocityGateAngleDiff = this.#velocity.direction - gateDiff.direction - (gate.midpoint.x < this.#pos.x ? Math.PI : 0);
             while (velocityGateAngleDiff < 2 * Math.PI) velocityGateAngleDiff += 2 * Math.PI;
             while (velocityGateAngleDiff > 2 * Math.PI) velocityGateAngleDiff -= 2 * Math.PI;
-            const velocityGateAngleUntolerable = Math.abs(velocityGateAngleDiff) > Math.PI / 16;
+            const velocityGateAngleUntolerable = Math.abs(velocityGateAngleDiff) > Math.PI / 8;
 
             let velocityAccelerationAngleDiff = this.#acceleration.direction - this.#velocity.direction - Math.PI;
             while (velocityAccelerationAngleDiff < 2 * Math.PI) velocityAccelerationAngleDiff += 2 * Math.PI;
@@ -166,7 +166,7 @@ export class Player {
                 } else {
                     // Brake
                     // if (velocityGateAngleUntolerable) {
-                    accelerate = true;
+                        accelerate = true;
                     // }
                 }
             } else {
@@ -175,11 +175,11 @@ export class Player {
                     accelerate = true;
                 } else {
                     // Reorient (prepare to brake)
-                    if (velocityAccelerationAngleDiff < 0) {
-                        rotateCcw = true;
-                    } else {
-                        rotateCw = true;
-                    }
+                    // if (velocityAccelerationAngleDiff < 0) {
+                    //     rotateCcw = true;
+                    // } else {
+                    //     rotateCw = true;
+                    // }
                 }
             }
         } else {

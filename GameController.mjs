@@ -5,13 +5,13 @@ export class GameController {
     #gatesCleared;
 
     constructor() {
-        this.#timeRemaining = 10_000;
+        this.#timeRemaining = 15_000;
         this.#gatesCleared = 0;
     }
 
     incrementTime() {
         this.#gatesCleared++;
-        this.#timeRemaining += 3_000;
+        this.#timeRemaining += 5_000;
     }
 
     get gatesCleared() { return this.#gatesCleared; }
