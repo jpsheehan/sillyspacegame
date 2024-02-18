@@ -6,25 +6,14 @@ import { GateManager } from "./GateManager.mjs";
 import { GameController } from "./GameController.mjs";
 import { Starfield } from "./Starfield.mjs";
 import { Enemy } from "./Enemy.mjs";
+import { StateMachine } from "./StateMachine.mjs";
+import { State } from "./State.mjs";
+import { IntroScreen } from "./_IntroScreen.mjs";
+import { PlayingScreen } from "./_PlayingScreen.mjs";
 
 const state = {
-    /** @type {Player} */
-    player: null,
-
-    /** @type {Enemy} */
-    enemy: null,
-
-    /** @type {Size} */
-    bounds: null,
-
-    /** @type {GateManager} */
-    gateManager: null,
-
-    /** @type {GameController} */
-    gameController: null,
-
-    /** @type {Starfield} */
-    starfield: null,
+    /** @type {StateMachine} */
+    stateMachine: null
 };
 
 GameGame(
@@ -54,46 +43,24 @@ GameGame(
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 3, 1);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 4, 1);
 
-        state.player = new Player(
-            "You",
-            new Point(width / 2, height / 2),
-            0,
-            images.ship,
-            enginesIdle,
-            enginesPowered,
-            images.particleSmoke,
-            sounds.engine,
-            () => state.gateManager.gate);
-        state.enemy = new Enemy(
-            "Bot",
-            new Point(width / 2, height / 2),
-            0,
-            images.ship,
-            enginesIdle,
-            enginesPowered,
-            images.particleSmoke,
-            sounds.engine,
-            () => state.gateManager.gate);
+        const sprites = { enginesIdle, enginesPowered };
 
-        const ships = [state.player, state.enemy];
+        const assets = { images, sounds, sprites, sprites };
 
-        state.gameController = new GameController(ships);
-        state.gateManager = new GateManager(ships, state.gameController, sounds.gate);
-        state.starfield = new Starfield(500, state.bounds);
+        const starfield = new Starfield(500, state.bounds);;
+
+        state.stateMachine = new StateMachine(
+            [
+                new IntroScreen(starfield),
+                new PlayingScreen(starfield, assets),
+            ]
+        );
     },
     (time, dt) => {
         // update
-        state.starfield.update(time, dt);
-        state.player.update(time, dt);
-        state.enemy.update(time, dt);
-        state.gateManager.update(time, dt);
-        state.gameController.update(time, dt);
+        state.stateMachine.update(time, dt);
     },
     (ctx, time) => {
         // render
-        state.starfield.render(ctx, time);
-        state.gateManager.render(ctx, time);
-        state.enemy.render(ctx, time);
-        state.player.render(ctx, time);
-        state.gameController.render(ctx, time);
+        state.stateMachine.render(ctx, time);
     });

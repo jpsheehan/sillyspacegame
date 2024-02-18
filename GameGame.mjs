@@ -99,6 +99,9 @@ export const Keyboard = {
     }
 };
 
+/**
+ * @type {Size}
+ */
 export let CanvasSize = null;
 
 /**
