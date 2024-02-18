@@ -108,14 +108,17 @@ export class Ship {
                 ctx.globalAlpha = 0.5;
             }
             drawImageCentered(ctx, this.#ship, x, y, angle);
-            if (this._acceleration.magnitude == 0) {
-                const index = getFrameIndex(this.#enginesIdle.length, time, fps);
-                drawImageCentered(ctx, this.#enginesIdle[index], x, y, angle);
-            } else {
-                const index = getFrameIndex(this.#enginesPowered.length, time, fps);
-                drawImageCentered(ctx, this.#enginesPowered[index], x, y, angle);
-            }
             ctx.globalAlpha = 1.0;
+
+            if (!this.#destroyed) {
+                if (this._acceleration.magnitude == 0) {
+                    const index = getFrameIndex(this.#enginesIdle.length, time, fps);
+                    drawImageCentered(ctx, this.#enginesIdle[index], x, y, angle);
+                } else {
+                    const index = getFrameIndex(this.#enginesPowered.length, time, fps);
+                    drawImageCentered(ctx, this.#enginesPowered[index], x, y, angle);
+                }
+            }
         }
 
         renderShipAt(this._pos.x, this._pos.y);

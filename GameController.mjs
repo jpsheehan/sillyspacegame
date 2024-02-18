@@ -58,8 +58,10 @@ export class GameController {
         for (let score of Object.values(this.#scores)) {
             const x = (i + 1) * CanvasSize.w / (Object.keys(this.#scores).length + 1)
 
+            const scoreText = score.ship.destroyed ? "☠️" : (score.timeRemaining / 1000.0).toFixed(1);
+
             drawTextCentered(ctx, score.name, x, 40, "#ffffff", "bold 24px sans-serif");
-            drawTextCentered(ctx, (score.timeRemaining / 1000.0).toFixed(1), x, 105, "#ffffff", "bold 48px sans-serif");
+            drawTextCentered(ctx, scoreText, x, 105, "#ffffff", "bold 48px sans-serif");
             drawTextCentered(ctx, score.gatesCleared, x, 140, "#ffffff", "bold 32px sans-serif");
 
             i++;
