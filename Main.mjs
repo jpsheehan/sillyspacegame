@@ -5,10 +5,14 @@ import { Point } from "./Point.mjs";
 import { GateManager } from "./GateManager.mjs";
 import { GameController } from "./GameController.mjs";
 import { Starfield } from "./Starfield.mjs";
+import { Enemy } from "./Enemy.mjs";
 
 const state = {
     /** @type {Player} */
     player: null,
+
+    /** @type {Enemy} */
+    enemy: null,
 
     /** @type {Size} */
     bounds: null,
@@ -20,7 +24,7 @@ const state = {
     gameController: null,
 
     /** @type {Starfield} */
-    starfield: null
+    starfield: null,
 };
 
 GameGame(
@@ -51,6 +55,17 @@ GameGame(
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 4, 1);
 
         state.player = new Player(
+            "You",
+            new Point(width / 2, height / 2),
+            0,
+            images.ship,
+            enginesIdle,
+            enginesPowered,
+            images.particleSmoke,
+            sounds.engine,
+            () => state.gateManager.gate);
+        state.enemy = new Enemy(
+            "Bot",
             new Point(width / 2, height / 2),
             0,
             images.ship,
@@ -60,14 +75,17 @@ GameGame(
             sounds.engine,
             () => state.gateManager.gate);
 
-        state.gameController = new GameController();
-        state.gateManager = new GateManager(state.player, state.gameController, sounds.gate);
+        const ships = [state.player, state.enemy];
+
+        state.gameController = new GameController(ships);
+        state.gateManager = new GateManager(ships, state.gameController, sounds.gate);
         state.starfield = new Starfield(500, state.bounds);
     },
     (time, dt) => {
         // update
         state.starfield.update(time, dt);
         state.player.update(time, dt);
+        state.enemy.update(time, dt);
         state.gateManager.update(time, dt);
         state.gameController.update(time, dt);
     },
@@ -75,6 +93,7 @@ GameGame(
         // render
         state.starfield.render(ctx, time);
         state.gateManager.render(ctx, time);
+        state.enemy.render(ctx, time);
         state.player.render(ctx, time);
         state.gameController.render(ctx, time);
     });

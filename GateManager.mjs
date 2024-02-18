@@ -1,15 +1,14 @@
 import { GameController } from "./GameController.mjs";
 import { CanvasSize } from "./GameGame.mjs";
 import { Gate } from "./Gate.mjs";
-import { Player } from "./Player.mjs";
 import { Point } from "./Point.mjs";
 
 export class GateManager {
 
-    #player;
+    #ships;
     #gate;
     #nextGate;
-    #previousPos;
+    #previousPositions;
     #gameController;
     #gateSound;
 
@@ -17,19 +16,19 @@ export class GateManager {
 
     /**
      * 
-     * @param {Player} player 
+     * @param {Ship[]} ships 
      * @param {GameController} gameController
      * @param {HTMLAudioElement} gateSound
      */
-    constructor(player, gameController, gateSound) {
-        this.#player = player;
+    constructor(ships, gameController, gateSound) {
+        this.#ships = ships;
         this.#gameController = gameController;
         this.#gateSound = gateSound;
 
         this.#gate = this.#createRandomGate();
         this.#nextGate = this.#createRandomGate();
 
-        this.#previousPos = this.#player.pos;
+        this.#previousPositions = this.#ships.map(ship => ship.pos.clone());
     }
 
     /**
@@ -37,7 +36,7 @@ export class GateManager {
      * @returns {Gate}
      */
     #createRandomGate() {
-        const gap = Math.max(200 - this.#gameController.gatesCleared * 2, 50);
+        const gap = Math.max(200 - this.#gameController.mostGatesCleared * 2, 50);
         return new Gate(new Point(
             Math.random() * (CanvasSize.w - 200) + 100,
             Math.random() * (CanvasSize.h - 200) + 100),
@@ -56,15 +55,20 @@ export class GateManager {
     }
 
     update() {
-        if (!this.#player.justTeleported && this.intersects(this.#gate.a, this.#gate.b, this.#player.pos, this.#previousPos)) {
-            this.#gameController.incrementTime();
-            this.#gateSound.play();
+        for (let i = 0; i < this.#ships.length; i++) {
+            const ship = this.#ships[i];
+            const previousPos = this.#previousPositions[i];
 
-            this.#gate = this.#nextGate;
-            this.#nextGate = this.#createRandomGate();
+            if (!ship.justTeleported && this.intersects(this.#gate.a, this.#gate.b, ship.pos, previousPos)) {
+                this.#gameController.incrementTime(ship.shipId);
+                this.#gateSound.play();
+
+                this.#gate = this.#nextGate;
+                this.#nextGate = this.#createRandomGate();
+            }
+
+            this.#previousPositions[i] = ship.pos.clone();
         }
-
-        this.#previousPos = this.#player.pos.clone();
     }
 
     /**

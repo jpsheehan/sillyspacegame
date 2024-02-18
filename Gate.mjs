@@ -25,7 +25,7 @@ export class Gate {
             pos.x + Math.cos(angle + Math.PI / 2) * gap / 2,
             pos.y - Math.sin(angle + Math.PI / 2) * gap / 2);
         this.#angle = angle;
-        this.#midpoint = pos;
+        this.#midpoint = pos.clone();
     }
 
     /**
