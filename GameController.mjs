@@ -59,10 +59,11 @@ export class GameController {
             const x = (i + 1) * CanvasSize.w / (Object.keys(this.#scores).length + 1)
 
             const scoreText = score.ship.destroyed ? "☠️" : (score.timeRemaining / 1000.0).toFixed(1);
+            const scoreColor = score.ship.destroyed ? "white" : score.timeRemaining < 5000.0 ? "red" : score.timeRemaining < 10000.0 ? "orange" : "white";
 
-            drawTextCentered(ctx, score.name, x, 40, "#ffffff", "bold 24px sans-serif");
-            drawTextCentered(ctx, scoreText, x, 105, "#ffffff", "bold 48px sans-serif");
-            drawTextCentered(ctx, score.gatesCleared, x, 140, "#ffffff", "bold 32px sans-serif");
+            drawTextCentered(ctx, score.name, x, 40, "white", "bold 24px sans-serif");
+            drawTextCentered(ctx, scoreText, x, 105, scoreColor, "bold 48px sans-serif");
+            drawTextCentered(ctx, score.gatesCleared, x, 140, "white", "bold 32px sans-serif");
 
             i++;
         }
