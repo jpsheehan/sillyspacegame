@@ -18,7 +18,7 @@ export class PlayingScreen extends State {
         const player = new Player(
             "You",
             new Point(CanvasSize.w / 2, CanvasSize.h / 2),
-            0,
+            Math.random() * 2 * Math.PI,
             assets.images.ship,
             assets.sprites.enginesIdle,
             assets.sprites.enginesPowered,
@@ -28,8 +28,8 @@ export class PlayingScreen extends State {
 
         const enemy = new Enemy(
             "Bot",
-            new Point(CanvasSize.w / 2, CanvasSize.h / 2),
-            0,
+            new Point(Math.random() * CanvasSize.w, Math.random() * CanvasSize.h),
+            Math.random() * 2 * Math.PI,
             assets.images.ship,
             assets.sprites.enginesIdle,
             assets.sprites.enginesPowered,
