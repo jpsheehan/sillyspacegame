@@ -47,17 +47,18 @@ GameGame(
             gate: "assets/gate.ogg"
         });
 
-        const enginesIdle = await createSpriteFrames(images.enginesIdle, 1, 3);
-        const enginesPowered = await createSpriteFrames(images.enginesPowered, 1, 4);
+        const enginesIdle = await createSpriteFrames(images.enginesIdle, 3, 1);
+        const enginesPowered = await createSpriteFrames(images.enginesPowered, 4, 1);
 
         state.player = new Player(
             new Point(width / 2, height / 2),
-            Math.random() * 2 * Math.PI,
+            0,
             images.ship,
             enginesIdle,
             enginesPowered,
             images.particleSmoke,
-            sounds.engine);
+            sounds.engine,
+            () => state.gateManager.gate);
 
         state.gameController = new GameController();
         state.gateManager = new GateManager(state.player, state.gameController, sounds.gate);

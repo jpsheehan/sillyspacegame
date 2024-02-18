@@ -21,12 +21,12 @@ export class Vector {
     /**
      * Adds this Vector and another Vector to create a new Vector.
      * @see https://math.stackexchange.com/questions/1365622/adding-two-polar-vectors
-     * @param {Vector} other 
+     * @param {Vector} that     
      * @returns {Vector}
      */
-    add(other) {
-        const mag = Math.sqrt(Math.pow(this.#mag, 2) + Math.pow(other.#mag, 2) + 2 * this.#mag * other.#mag * Math.cos(other.#dir - this.#dir));
-        const dir = this.#dir + Math.atan2(other.#mag * Math.sin(other.#dir - this.#dir), this.#mag + other.#mag * Math.cos(other.#dir - this.#dir));
+    add(that) {
+        const mag = Math.sqrt(Math.pow(this.#mag, 2) + Math.pow(that.#mag, 2) + 2 * this.#mag * that.#mag * Math.cos(that.#dir - this.#dir));
+        const dir = this.#dir + Math.atan2(that.#mag * Math.sin(that.#dir - this.#dir), this.#mag + that.#mag * Math.cos(that.#dir - this.#dir));
         return new Vector(mag, dir);
     }
 }

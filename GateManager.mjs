@@ -13,6 +13,8 @@ export class GateManager {
     #gameController;
     #gateSound;
 
+    get gate() { return this.#gate; }
+
     /**
      * 
      * @param {Player} player 

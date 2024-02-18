@@ -1,3 +1,5 @@
+import { Vector } from "./Vector.mjs";
+
 export class Point {
     #x; #y;
 
@@ -22,7 +24,7 @@ export class Point {
      * @param {Point} that 
      * @returns {Point}
      */
-    add(that) { return new Point(this.x + that.x, this.y + that.y)}
+    add(that) { return new Point(this.x + that.x, this.y + that.y) }
 
     /**
      * 
@@ -49,5 +51,14 @@ export class Point {
      * @param {number} s 
      * @returns {Point}
      */
-    mul(s) { return new Point(this.x * s, this.y * s)}
+    mul(s) { return new Point(this.x * s, this.y * s) }
+
+    /**
+     * @returns {Vector}
+     */
+    toPolar() { 
+        return new Vector(
+            Math.sqrt(Math.pow(this.#x, 2) + Math.pow(this.#y, 2)),
+            Math.atan(this.#y / this.#x));
+    }
 }

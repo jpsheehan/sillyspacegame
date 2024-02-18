@@ -4,9 +4,12 @@ export class Gate {
     #a;
     #b;
     #angle;
+    #midpoint;
 
     get a() { return this.#a; }
     get b() { return this.#b; }
+
+    get midpoint() { return this.#midpoint; }
 
     /**
      * 
@@ -22,6 +25,7 @@ export class Gate {
             pos.x + Math.cos(angle + Math.PI / 2) * gap / 2,
             pos.y - Math.sin(angle + Math.PI / 2) * gap / 2);
         this.#angle = angle;
+        this.#midpoint = pos;
     }
 
     /**
