@@ -206,3 +206,30 @@ async function loadResources(resources, creator, readyEvent, errorEvent) {
     }
     return resourceMap;
 }
+
+/**
+ * 
+ * @param {CanvasRenderingContext2D} ctx 
+ * @param {string} text 
+ * @param {number} x 
+ * @param {number} y 
+ */
+export function drawTextCentered(ctx, text, x, y, style, font) {
+
+    if (style) {
+        ctx.fillStyle = style;
+    }
+    if (font) {
+        ctx.font = font;
+    }
+
+    const dimensions = ctx.measureText(text);
+    const textX = x - (dimensions.width / 2);
+    const textY =  y - (dimensions.actualBoundingBoxAscent / 2);
+    ctx.fillText(text, textX, textY);
+
+    if (style) {
+        ctx.strokeStyle = style;
+    }
+    ctx.strokeRect(textX, textY, dimensions.widthw, dimensions.actualBoundingBoxAscent);
+}
