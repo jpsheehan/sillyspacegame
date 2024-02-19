@@ -177,7 +177,7 @@ export class Ship {
         }
         if (this.#destroyed) {
             // spin a little bit when dead
-            this._acceleration.direction += (this.shipId * 2 - 1) * dt / 1000.0;
+            this._acceleration.direction += ((this.shipId % 2) * 2 - 1) * dt / 1000.0;
         }
 
         this._acceleration.magnitude = clamp(this._acceleration.magnitude, 0, MAX_ACCELERATION);

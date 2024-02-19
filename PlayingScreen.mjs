@@ -72,9 +72,9 @@ export class PlayingScreen extends State {
                 gameController.update(time, dt);
 
                 if (gameController.isWon) {
-                    stateMachine.switchTo("result", {...gameController.playerScore, numEnemies, won: true });
+                    stateMachine.switchTo("result", {...gameController.playerScore, numEnemies, won: true, ships });
                 } else if (gameController.isLost) {
-                    stateMachine.switchTo("result", {...gameController.playerScore, numEnemies, won: false });
+                    stateMachine.switchTo("result", {...gameController.playerScore, numEnemies, won: false, ships });
                 }
             }, (ctx, time, data) => {
                 const { ships, starfield, gateManager, gameController } = data;
