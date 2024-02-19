@@ -50,10 +50,15 @@ export async function GameGame(options, init, update, render) {
         const keyMap = {
             "KeyW": "w",
             "KeyA": "a",
-            "KeyS": "s",
+            // "KeyS": "s",
             "KeyD": "d",
-            "KeyQ": "q",
-            "KeyE": "e",
+            // "KeyQ": "q",
+            // "KeyE": "e",
+            "Digit1": "1",
+            "Digit2": "2",
+            "Digit3": "3",
+            "Digit4": "4",
+            "Digit5": "5",
             "Space": "space"
         };
         document.addEventListener("keydown", (evt) => {
@@ -90,12 +95,22 @@ export async function GameGame(options, init, update, render) {
 export const Keyboard = {
     keyDown: {
         w: false,
-        a: false,
+        // a: false,
         s: false,
         d: false,
-        q: false,
-        e: false,
+        // q: false,
+        // e: false,
+        [1]: false,
+        [2]: false,
+        [3]: false,
+        [4]: false,
+        [5]: false,
         space: false
+    },
+    reset: () => {
+        Object.keys(Keyboard.keyDown).forEach(key => {
+            Keyboard.keyDown[key] = false;
+        })
     }
 };
 

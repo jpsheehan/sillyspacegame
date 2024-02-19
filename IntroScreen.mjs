@@ -8,18 +8,30 @@ export class IntroScreen extends State {
      * @param {Starfield} starfield 
      */
     constructor(starfield) {
-        super("intro", { starfield },
-            undefined,
+        super("intro", { starfield, numEnemies: 1 },
+            (_, args, data) => ({ starfield: data.starfield, numEnemies: args?.numEnemies ?? data.numEnemies }),
             (time, dt, stateMachine, data) => {
                 const { starfield } = data;
                 starfield.update(time, dt);
 
                 if (Keyboard.keyDown.space) {
-                    stateMachine.switchTo("playing");
+                    stateMachine.switchTo("playing", { numEnemies: data.numEnemies });
+                }
+
+                if (Keyboard.keyDown['1']) {
+                    data.numEnemies = 1;
+                } else if (Keyboard.keyDown['2']) {
+                    data.numEnemies = 2;
+                } else if (Keyboard.keyDown['3']) {
+                    data.numEnemies = 3;
+                } else if (Keyboard.keyDown['4']) {
+                    data.numEnemies = 4;
+                } else if (Keyboard.keyDown['5']) {
+                    data.numEnemies = 5;
                 }
             },
             (ctx, time, data) => {
-                const { starfield } = data;
+                const { starfield, numEnemies } = data;
 
                 starfield.render(ctx, time)
 
@@ -29,8 +41,9 @@ export class IntroScreen extends State {
                 drawTextCentered(ctx, "Silly Space Game", center, middle - 150, "#ffffff", "bold 72px sans-serif");
                 drawTextCentered(ctx, "W: Accelerate", center, middle - 50, undefined, "bold 48px sans-serif");
                 drawTextCentered(ctx, "A, D: Rotate", center, middle);
-                drawTextCentered(ctx, "Fly through the green gates", center, middle + 100);
-                drawTextCentered(ctx, "Press Space to Start", center, middle + 200, "#ffffff", "bold 48px sans-serif");
+                drawTextCentered(ctx, `# Enemies: ${numEnemies} (1 - 5)`, center, middle + 100)
+                drawTextCentered(ctx, "Fly through the green gates", center, middle + 200);
+                drawTextCentered(ctx, "Press Space to Start", center, middle + 250, "#ffffff", "bold 48px sans-serif");
             });
     }
 }

@@ -7,8 +7,6 @@ import { Point } from "./Point.mjs";
 import { Starfield } from "./Starfield.mjs";
 import { State } from "./State.mjs";
 
-const NUM_ENEMIES = 1;
-
 export class PlayingScreen extends State {
 
     /**
@@ -18,7 +16,8 @@ export class PlayingScreen extends State {
      */
     constructor(starfield, assets) {
         super("playing", { starfield, assets },
-            (_, __, data) => {
+            (_, args, data) => {
+                const { numEnemies } = args;
                 const { starfield, assets } = data;
                 const player = new Player(
                     "You",
@@ -33,7 +32,7 @@ export class PlayingScreen extends State {
 
                 const enemies = [];
 
-                for (let i = 0; i < NUM_ENEMIES; i++) {
+                for (let i = 0; i < numEnemies; i++) {
                     const enemy = new Enemy(
                         "Bot",
                         new Point(Math.random() * CanvasSize.w, Math.random() * CanvasSize.h),
@@ -58,11 +57,12 @@ export class PlayingScreen extends State {
                     gameController,
                     gateManager,
                     starfield,
-                    assets
+                    assets,
+                    numEnemies
                 }
             },
             (time, dt, stateMachine, data) => {
-                const { ships, starfield, gateManager, gameController } = data;
+                const { ships, starfield, gateManager, gameController, numEnemies } = data;
 
                 starfield.update(time, dt);
                 for (let ship of ships) {
@@ -72,9 +72,9 @@ export class PlayingScreen extends State {
                 gameController.update(time, dt);
 
                 if (gameController.isWon) {
-                    stateMachine.switchTo("win", gameController.playerScore);
+                    stateMachine.switchTo("win", {...gameController.playerScore, numEnemies });
                 } else if (gameController.isLost) {
-                    stateMachine.switchTo("lose", gameController.playerScore);
+                    stateMachine.switchTo("lose", {...gameController.playerScore, numEnemies });
                 }
             }, (ctx, time, data) => {
                 const { ships, starfield, gateManager, gameController } = data;

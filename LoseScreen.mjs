@@ -4,14 +4,15 @@ import { State } from "./State.mjs";
 export class LoseScreen extends State {
     constructor(starfield) {
         super("lose", { starfield },
-            (_, args, data) => ({ ...data, score: args.score, time: args.time }),
+            (_, args, data) => ({ ...data, score: args.score, time: args.time, numEnemies: args.numEnemies }),
             (time, dt, stateMachine, data) => {
-                const { starfield } = data;
+                const { starfield, numEnemies } = data;
 
                 starfield.update(time, dt);
 
                 if (Keyboard.keyDown.space) {
-                    stateMachine.switchTo("playing");
+                    Keyboard.reset();
+                    stateMachine.switchTo("intro", { numEnemies });
                 }
             }, (ctx, time2, data) => {
                 const { starfield, score, time } = data;
