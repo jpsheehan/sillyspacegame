@@ -37,10 +37,10 @@ export class PlayingScreen extends State {
                         "Bot",
                         new Point(Math.random() * CanvasSize.w, Math.random() * CanvasSize.h),
                         Math.random() * 2 * Math.PI,
-                        assets.images.ship,
-                        assets.images.shipDestroyed,
-                        assets.sprites.enginesIdle,
-                        assets.sprites.enginesPowered,
+                        assets.images.enemy,
+                        assets.images.enemy,
+                        assets.sprites.enemyEngines,
+                        assets.sprites.enemyEngines,
                         assets.images.particleSmoke,
                         () => gateManager.gate);
 

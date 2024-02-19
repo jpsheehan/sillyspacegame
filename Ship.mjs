@@ -3,6 +3,7 @@ import { Vector } from "./Vector.mjs";
 import { CanvasSize, clamp, drawImageCentered, getFrameIndex } from "./GameGame.mjs";
 import { ParticleEmitter } from "./ParticleEmitter.mjs";
 import { Gate } from "./Gate.mjs";
+import { Enemy } from "./Enemy.mjs";
 
 /**
  * px/s^2
@@ -100,11 +101,7 @@ export class Ship {
         const angle = this._acceleration.direction;
 
         const renderShipAt = (x, y) => {
-            // if (this.#destroyed) {
-            //     ctx.globalAlpha = 0.5;
-            // }
             drawImageCentered(ctx, this.#destroyed ? this.#shipDestroyed : this.#ship, x, y, angle);
-            // ctx.globalAlpha = 1.0;
 
             if (!this.#destroyed) {
                 if (this._acceleration.magnitude == 0) {

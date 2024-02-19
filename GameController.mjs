@@ -33,12 +33,12 @@ export class GameController {
     get isWon() {
         /** @type {Enemy[]} */
         const enemieScores = Object.values(this.#scores).filter(score => score.ship instanceof Enemy);
-        return enemieScores.every(enemyScore => enemyScore.timeRemaining <= 0);
+        return enemieScores.every(enemyScore => enemyScore.ship.destroyed);
     }
 
     get isLost() {
         const playerScore = Object.values(this.#scores).find(score => score.ship instanceof Player);
-        return playerScore.timeRemaining <= 0;
+        return playerScore.ship.destroyed;
     }
 
     get playerScore() {

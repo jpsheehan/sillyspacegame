@@ -28,13 +28,16 @@ GameGame(
             shipDestroyed: "assets/ship_destroyed.png",
             enginesIdle: "assets/engines_idle.png",
             enginesPowered: "assets/engines_powered.png",
-            particleSmoke: "assets/particle_smoke.png"
+            particleSmoke: "assets/particle_smoke.png",
+            enemy: "assets/enemy.png",
+            enemyEngines: "assets/enemy_engines.png"
         });
 
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 3, 1);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 4, 1);
+        const enemyEngines = await createSpriteFrames(images.enemyEngines, 10, 1);
 
-        const sprites = { enginesIdle, enginesPowered };
+        const sprites = { enginesIdle, enginesPowered, enemyEngines };
 
         const assets = { images, sprites, sprites };
 
