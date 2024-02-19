@@ -18,10 +18,16 @@ export async function GameGame(options, init, update, render) {
 
     CanvasSize = new Size(width, height);
 
+    canvas.addEventListener("contextmenu", (evt) => {
+        evt.preventDefault();
+        return false
+    });
+
     const ctx = canvas.getContext("2d");
 
     initKeyboard();
     initMouse();
+    initPointer();
 
     const adaptiveFps = Math.round(await getFPS());
     const chosenFps = Math.max(fps ?? 0, adaptiveFps);
@@ -50,18 +56,29 @@ export async function GameGame(options, init, update, render) {
     function initMouse() {
         document.addEventListener("mousedown", (evt) => {
             if (evt.button === 0) {
+                evt.preventDefault();
                 Mouse.keyDown.left = true;
             }
         });
         document.addEventListener("mouseup", (evt) => {
             if (evt.button === 0) {
+                evt.preventDefault();
                 Mouse.keyDown.left = false;
             }
         });
         document.addEventListener("mousemove", (evt) => {
-            Mouse.x = Math.floor((evt.clientX - canvas.offsetLeft) / (canvas.clientWidth / Number.parseInt(canvas.getAttribute("width"))));
-            Mouse.y = Math.floor((evt.clientY - canvas.offsetTop) / (canvas.clientHeight / Number.parseInt(canvas.getAttribute("height"))));
+            evt.preventDefault();
+            const { x, y } = clientSpaceToCanvasSpace(evt.clientX, evt.clientY);
+            Mouse.x = x;
+            Mouse.y = y
         });
+    }
+
+    function clientSpaceToCanvasSpace(x, y) {
+        return {
+            x: Math.floor((x - canvas.offsetLeft) / (canvas.clientWidth / Number.parseInt(canvas.getAttribute("width")))),
+            y: Math.floor((y - canvas.offsetTop) / (canvas.clientHeight / Number.parseInt(canvas.getAttribute("height"))))
+        };
     }
 
     function initKeyboard() {
@@ -96,6 +113,26 @@ export async function GameGame(options, init, update, render) {
         });
     }
 
+    function initPointer() {
+        document.addEventListener("pointerdown", (evt) => {
+            if (evt.pointerType === "touch") {
+                evt.preventDefault();
+                const { x, y } = clientSpaceToCanvasSpace(evt.clientX, evt.clientY);
+                Pointer.pointsDown.push({ id: evt.pointerId, x, y });
+            }
+        })
+
+        document.addEventListener("pointerup", (evt) => {
+            if (evt.pointerType === "touch") {
+                evt.preventDefault();
+                const idx = Pointer.pointsDown.findIndex(point => point.id === evt.pointerId);
+                if (idx > -1) {
+                    Pointer.pointsDown.splice(idx, 1);
+                }
+            }
+        });
+    }
+
     /**
      * @see https://stackoverflow.com/a/44013686
      * @returns {Promise<number>}
@@ -107,6 +144,11 @@ export async function GameGame(options, init, update, render) {
             )
         )
     }
+}
+
+export const Pointer = {
+    pointsDown: [],
+    reset: () => Pointer.pointsDown = [],
 }
 
 export const Mouse = {
@@ -269,7 +311,7 @@ export function drawTextCentered(ctx, text, x, y, style, font) {
 
     const dimensions = ctx.measureText(text);
     const textX = x - (dimensions.width / 2);
-    const textY =  y - (dimensions.actualBoundingBoxAscent / 2);
+    const textY = y - (dimensions.actualBoundingBoxAscent / 2);
     ctx.fillText(text, textX, textY);
 
     if (style) {

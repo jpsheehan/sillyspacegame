@@ -1,4 +1,5 @@
 import { CanvasSize, Keyboard, Mouse, drawTextCentered } from "./GameGame.mjs";
+import { InputHelper } from "./InputHelper.mjs";
 import { Starfield } from "./Starfield.mjs";
 import { State } from "./State.mjs";
 
@@ -18,7 +19,7 @@ export class IntroScreen extends State {
                 const { starfield } = data;
                 starfield.update(time, dt);
 
-                if (Keyboard.keyDown.space) {
+                if (InputHelper.advanceMenu) {
                     stateMachine.switchTo("playing", { numEnemies: data.numEnemies });
                 }
 

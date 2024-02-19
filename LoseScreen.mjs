@@ -1,4 +1,5 @@
-import { CanvasSize, Keyboard, drawTextCentered } from "./GameGame.mjs";
+import { CanvasSize, drawTextCentered } from "./GameGame.mjs";
+import { InputHelper } from "./InputHelper.mjs";
 import { State } from "./State.mjs";
 
 export class LoseScreen extends State {
@@ -10,8 +11,8 @@ export class LoseScreen extends State {
 
                 starfield.update(time, dt);
 
-                if (Keyboard.keyDown.space) {
-                    Keyboard.reset();
+                if (InputHelper.advanceMenu) {
+                    InputHelper.resetAdvanceMenu();
                     stateMachine.switchTo("intro", { numEnemies });
                 }
             }, (ctx, time2, data) => {

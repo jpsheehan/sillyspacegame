@@ -1,17 +1,18 @@
-import { Keyboard } from "./GameGame.mjs";
+import { InputHelper } from "./InputHelper.mjs";
 import { Ship } from "./Ship.mjs";
 
 export class Player extends Ship {
+
     _processInput() {
         const controls = { accelerate: false, rotateCcw: false, rotateCw: false };
 
-        if (Keyboard.keyDown.w) {
+        if (InputHelper.acceleratePressed) {
             controls.accelerate = true;
         }
 
-        if (Keyboard.keyDown.a) {
+        if (InputHelper.rotateCounterClockwisePressed) {
             controls.rotateCcw = true;
-        } else if (Keyboard.keyDown.d) {
+        } else if (InputHelper.rotateClockwisePressed) {
             controls.rotateCw = true;
         }
 
