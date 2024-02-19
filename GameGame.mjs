@@ -21,6 +21,7 @@ export async function GameGame(options, init, update, render) {
     const ctx = canvas.getContext("2d");
 
     initKeyboard();
+    initMouse();
 
     const adaptiveFps = Math.round(await getFPS());
     const chosenFps = Math.max(fps ?? 0, adaptiveFps);
@@ -44,6 +45,23 @@ export async function GameGame(options, init, update, render) {
         lastTime = time;
 
         update(time, dt);
+    }
+
+    function initMouse() {
+        document.addEventListener("mousedown", (evt) => {
+            if (evt.button === 0) {
+                Mouse.keyDown.left = true;
+            }
+        });
+        document.addEventListener("mouseup", (evt) => {
+            if (evt.button === 0) {
+                Mouse.keyDown.left = false;
+            }
+        });
+        document.addEventListener("mousemove", (evt) => {
+            Mouse.x = Math.floor((evt.clientX - canvas.offsetLeft) / (canvas.clientWidth / Number.parseInt(canvas.getAttribute("width"))));
+            Mouse.y = Math.floor((evt.clientY - canvas.offsetTop) / (canvas.clientHeight / Number.parseInt(canvas.getAttribute("height"))));
+        });
     }
 
     function initKeyboard() {
@@ -91,6 +109,14 @@ export async function GameGame(options, init, update, render) {
     }
 }
 
+export const Mouse = {
+    keyDown: {
+        left: false
+    },
+    x: 0,
+    y: 0,
+    reset: () => Mouse.keyDown.left = false
+}
 
 export const Keyboard = {
     keyDown: {

@@ -1,8 +1,12 @@
-import { CanvasSize, Keyboard, drawTextCentered } from "./GameGame.mjs";
+import { CanvasSize, Keyboard, Mouse, drawTextCentered } from "./GameGame.mjs";
 import { Starfield } from "./Starfield.mjs";
 import { State } from "./State.mjs";
 
+const URL = "https://github.com/jpsheehan/sillyspacegame";
+
 export class IntroScreen extends State {
+    #urlDimensions;
+
     /**
      * 
      * @param {Starfield} starfield 
@@ -29,6 +33,20 @@ export class IntroScreen extends State {
                 } else if (Keyboard.keyDown['5']) {
                     data.numEnemies = 5;
                 }
+
+                if (this.#urlDimensions) {
+                    if (Mouse.x >= this.#urlDimensions.x && Mouse.x < (this.#urlDimensions.x + this.#urlDimensions.width) &&
+                        Mouse.y >= this.#urlDimensions.y && Mouse.y < (this.#urlDimensions.y + this.#urlDimensions.height)) {
+                        if (Mouse.keyDown.left) {
+                            window.open(URL, "_blank");
+                            Mouse.reset();
+                        } else {
+                            document.body.style.cursor = "pointer";
+                        }
+                    } else {
+                        document.body.style.cursor = "default";
+                    }
+                }
             },
             (ctx, time, data) => {
                 const { starfield, numEnemies } = data;
@@ -48,6 +66,23 @@ export class IntroScreen extends State {
 
                 ctx.font = "18px sans-serif";
                 ctx.fillText("A game by Jesse Sheehan", 20, CanvasSize.h - 20);
+
+                if (!this.#urlDimensions) {
+                    const dimensions = ctx.measureText(URL);
+                    this.#urlDimensions = {
+                        width: dimensions.width,
+                        height: dimensions.fontBoundingBoxAscent,
+                        x: CanvasSize.w - 20 - dimensions.width,
+                        y: CanvasSize.h - 20 - dimensions.fontBoundingBoxAscent
+                    }
+                }
+                ctx.fillText(URL, this.#urlDimensions.x, this.#urlDimensions.y + this.#urlDimensions.height);
+
+                ctx.beginPath();
+                ctx.moveTo(this.#urlDimensions.x, this.#urlDimensions.y + this.#urlDimensions.height + 3);
+                ctx.lineTo(this.#urlDimensions.x + this.#urlDimensions.width, this.#urlDimensions.y + this.#urlDimensions.height + 3);
+                ctx.closePath();
+                ctx.stroke();
             });
     }
 }
