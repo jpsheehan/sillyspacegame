@@ -38,12 +38,16 @@ export class IntroScreen extends State {
                 const center = CanvasSize.w / 2;
                 const middle = CanvasSize.h / 2;
 
-                drawTextCentered(ctx, "Silly Space Game", center, middle - 150, "#ffffff", "bold 72px sans-serif");
-                drawTextCentered(ctx, "W: Accelerate", center, middle - 50, undefined, "bold 48px sans-serif");
-                drawTextCentered(ctx, "A, D: Rotate", center, middle);
-                drawTextCentered(ctx, `# Enemies: ${numEnemies} (1 - 5)`, center, middle + 100)
-                drawTextCentered(ctx, "Fly through the green gates", center, middle + 200);
+                drawTextCentered(ctx, "Silly Space Game", center, middle - 175, "#ffffff", "bold 72px sans-serif");
+                drawTextCentered(ctx, "Fly through the green gates", center, middle - 75, "white", "bold 48px sans-serif");
+
+                drawTextCentered(ctx, "W: Accelerate", center, middle + 25, "white", "bold 48px sans-serif");
+                drawTextCentered(ctx, "A, D: Rotate", center, middle + 75);
+                drawTextCentered(ctx, `# Enemies: ${numEnemies} (1 - 5)`, center, middle + 175)
                 drawTextCentered(ctx, "Press Space to Start", center, middle + 250, "#ffffff", "bold 48px sans-serif");
+
+                ctx.font = "18px sans-serif";
+                ctx.fillText("A game by Jesse Sheehan", 20, CanvasSize.h - 20);
             });
     }
 }

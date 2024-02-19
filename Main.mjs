@@ -1,17 +1,10 @@
 import { GameGame, createSpriteFrames, loadImages, loadSounds } from "./GameGame.mjs";
-import { Player } from "./Player.mjs";
 import { Size } from "./Size.mjs";
-import { Point } from "./Point.mjs";
-import { GateManager } from "./GateManager.mjs";
-import { GameController } from "./GameController.mjs";
 import { Starfield } from "./Starfield.mjs";
-import { Enemy } from "./Enemy.mjs";
 import { StateMachine } from "./StateMachine.mjs";
-import { State } from "./State.mjs";
 import { IntroScreen } from "./IntroScreen.mjs";
 import { PlayingScreen } from "./PlayingScreen.mjs";
-import { WinScreen } from "./WinScreen.mjs";
-import { LoseScreen } from "./LoseScreen.mjs";
+import { ResultScreen } from "./ResultScreen.mjs";
 
 const state = {
     /** @type {StateMachine} */
@@ -55,8 +48,7 @@ GameGame(
             [
                 new IntroScreen(starfield),
                 new PlayingScreen(starfield, assets),
-                new WinScreen(starfield),
-                new LoseScreen(starfield)
+                new ResultScreen(starfield),
             ]
         );
     },
