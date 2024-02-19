@@ -14,8 +14,8 @@ const state = {
 GameGame(
     {
         canvasId: "canvas",
-        width: 1024,
-        height: 768,
+        width: 1280,
+        height: 600,
         fps: 60
     },
     async (root) => {

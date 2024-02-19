@@ -87,6 +87,7 @@ export class Ship {
     destroy() {
         if (!this.#destroyed) {
             this.#destroyed = true;
+            this._velocity.magnitude = Math.min(this._velocity.magnitude, MAX_VELOCITY / 4);
         }
     }
 
