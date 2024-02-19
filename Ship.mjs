@@ -29,8 +29,6 @@ export class Ship {
     #enginesIdle;
     #enginesPowered;
 
-    #engineSound;
-
     #smokeEmitter;
 
     _acceleration;
@@ -49,18 +47,14 @@ export class Ship {
      * @param {CanvasImageSource[]} enginesIdle
      * @param {CanvasImageSource[]} enginesPowered
      * @param {CanvasImageSource} particleSmoke
-     * @param {HTMLAudioElement} engineSound
      * @param {() => Gate} getGate
      */
-    constructor(name, pos, rot, ship, enginesIdle, enginesPowered, particleSmoke, engineSound, getGate) {
+    constructor(name, pos, rot, ship, enginesIdle, enginesPowered, particleSmoke, getGate) {
         this.#name = name;
         this._pos = pos.clone();
         this.#ship = ship;
         this.#enginesIdle = enginesIdle;
         this.#enginesPowered = enginesPowered;
-        this.#engineSound = engineSound;
-        this.#engineSound.loop = true;
-        this.#engineSound.volume = 0.5;
         this.#smokeEmitter = new ParticleEmitter(particleSmoke, 100);
         this._getGate = getGate;
 
@@ -159,14 +153,8 @@ export class Ship {
 
         if (accelerate) {
             this._acceleration.magnitude += ACCELERATION * dt / 1000.0;
-            if (this.#engineSound.paused) {
-                this.#engineSound.play();
-            }
         } else {
             this._acceleration.magnitude = 0;
-            if (!this.#engineSound.paused) {
-                this.#engineSound.pause();
-            }
         }
 
         if (rotateCw) {

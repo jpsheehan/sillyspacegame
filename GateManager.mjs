@@ -10,7 +10,6 @@ export class GateManager {
     #nextGate;
     #previousPositions;
     #gameController;
-    #gateSound;
 
     get gate() { return this.#gate; }
 
@@ -18,12 +17,10 @@ export class GateManager {
      * 
      * @param {Ship[]} ships 
      * @param {GameController} gameController
-     * @param {HTMLAudioElement} gateSound
      */
-    constructor(ships, gameController, gateSound) {
+    constructor(ships, gameController) {
         this.#ships = ships;
         this.#gameController = gameController;
-        this.#gateSound = gateSound;
 
         this.#gate = this.#createRandomGate();
         this.#nextGate = this.#createRandomGate();
@@ -61,7 +58,6 @@ export class GateManager {
 
             if (!ship.justTeleported && !ship.destroyed && this.intersects(this.#gate.a, this.#gate.b, ship.pos, previousPos)) {
                 this.#gameController.incrementTime(ship.shipId);
-                this.#gateSound.play();
 
                 this.#gate = this.#nextGate;
                 this.#nextGate = this.#createRandomGate();

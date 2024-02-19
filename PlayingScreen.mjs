@@ -27,7 +27,6 @@ export class PlayingScreen extends State {
                     assets.sprites.enginesIdle,
                     assets.sprites.enginesPowered,
                     assets.images.particleSmoke,
-                    assets.sounds.engine,
                     () => gateManager.gate);
 
                 const enemies = [];
@@ -41,7 +40,6 @@ export class PlayingScreen extends State {
                         assets.sprites.enginesIdle,
                         assets.sprites.enginesPowered,
                         assets.images.particleSmoke,
-                        assets.sounds.engine,
                         () => gateManager.gate);
 
                     enemies.push(enemy);
@@ -50,7 +48,7 @@ export class PlayingScreen extends State {
                 const ships = [player, ...enemies];
 
                 const gameController = new GameController(ships);
-                const gateManager = new GateManager(ships, gameController, assets.sounds.gate);
+                const gateManager = new GateManager(ships, gameController);
 
                 return {
                     ships,

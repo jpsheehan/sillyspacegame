@@ -1,4 +1,4 @@
-import { GameGame, createSpriteFrames, loadImages, loadSounds } from "./GameGame.mjs";
+import { GameGame, createSpriteFrames, loadImages } from "./GameGame.mjs";
 import { Size } from "./Size.mjs";
 import { Starfield } from "./Starfield.mjs";
 import { StateMachine } from "./StateMachine.mjs";
@@ -30,17 +30,12 @@ GameGame(
             particleSmoke: "assets/particle_smoke.png"
         });
 
-        const sounds = await loadSounds({
-            engine: "assets/engine.ogg",
-            gate: "assets/gate.ogg"
-        });
-
         const enginesIdle = await createSpriteFrames(images.enginesIdle, 3, 1);
         const enginesPowered = await createSpriteFrames(images.enginesPowered, 4, 1);
 
         const sprites = { enginesIdle, enginesPowered };
 
-        const assets = { images, sounds, sprites, sprites };
+        const assets = { images, sprites, sprites };
 
         const starfield = new Starfield(500, state.bounds);;
 
