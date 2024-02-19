@@ -175,6 +175,10 @@ export class Ship {
         if (rotateCcw) {
             this._acceleration.direction -= TURNING_POWER * dt / 1000.0;
         }
+        if (this.#destroyed) {
+            // spin a little bit when dead
+            this._acceleration.direction += (this.shipId * 2 - 1) * dt / 1000.0;
+        }
 
         this._acceleration.magnitude = clamp(this._acceleration.magnitude, 0, MAX_ACCELERATION);
 

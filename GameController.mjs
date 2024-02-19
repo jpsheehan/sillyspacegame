@@ -55,15 +55,23 @@ export class GameController {
      */
     render(ctx, _time) {
         let i = 0;
+        const highestScore = Math.max.apply(null, Object.values(this.#scores).map(score => score.gatesCleared));
         for (let score of Object.values(this.#scores)) {
             const x = (i + 1) * CanvasSize.w / (Object.keys(this.#scores).length + 1)
 
-            const scoreText = score.ship.destroyed ? "☠️" : (score.timeRemaining / 1000.0).toFixed(1);
-            const scoreColor = score.ship.destroyed ? "white" : score.timeRemaining < 5000.0 ? "red" : score.timeRemaining < 10000.0 ? "orange" : "white";
+            const decimalPlaces = score.timeRemaining < 1000 ? 2 : score.timeRemaining < 10000 ? 1 : 0;
 
-            drawTextCentered(ctx, score.name, x, 40, "white", "bold 24px sans-serif");
+            const winning = highestScore === score.gatesCleared;
+            const defaultColor = winning ? "gold" : "white";
+
+            const scoreText = score.ship.destroyed ? "☠️" : (score.timeRemaining / 1000.0).toFixed(decimalPlaces);
+            const scoreColor = score.ship.destroyed ? defaultColor : score.timeRemaining < 5000.0 ? "red" : defaultColor;
+
+            const nameText = /*winning ? "👑 " + score.name + " 👑" :*/ score.name;
+
+            drawTextCentered(ctx, nameText, x, 40, defaultColor, "bold 24px sans-serif");
             drawTextCentered(ctx, scoreText, x, 105, scoreColor, "bold 48px sans-serif");
-            drawTextCentered(ctx, score.gatesCleared, x, 140, "white", "bold 32px sans-serif");
+            drawTextCentered(ctx, score.gatesCleared, x, 140, defaultColor, "bold 32px sans-serif");
 
             i++;
         }
