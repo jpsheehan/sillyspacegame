@@ -26,6 +26,7 @@ export class Ship {
     _pos;
 
     #ship;
+    #shipDestroyed;
     #enginesIdle;
     #enginesPowered;
 
@@ -49,10 +50,11 @@ export class Ship {
      * @param {CanvasImageSource} particleSmoke
      * @param {() => Gate} getGate
      */
-    constructor(name, pos, rot, ship, enginesIdle, enginesPowered, particleSmoke, getGate) {
+    constructor(name, pos, rot, ship, shipDestroyed, enginesIdle, enginesPowered, particleSmoke, getGate) {
         this.#name = name;
         this._pos = pos.clone();
         this.#ship = ship;
+        this.#shipDestroyed = shipDestroyed;
         this.#enginesIdle = enginesIdle;
         this.#enginesPowered = enginesPowered;
         this.#smokeEmitter = new ParticleEmitter(particleSmoke, 100);
@@ -98,11 +100,11 @@ export class Ship {
         const angle = this._acceleration.direction;
 
         const renderShipAt = (x, y) => {
-            if (this.#destroyed) {
-                ctx.globalAlpha = 0.5;
-            }
-            drawImageCentered(ctx, this.#ship, x, y, angle);
-            ctx.globalAlpha = 1.0;
+            // if (this.#destroyed) {
+            //     ctx.globalAlpha = 0.5;
+            // }
+            drawImageCentered(ctx, this.#destroyed ? this.#shipDestroyed : this.#ship, x, y, angle);
+            // ctx.globalAlpha = 1.0;
 
             if (!this.#destroyed) {
                 if (this._acceleration.magnitude == 0) {

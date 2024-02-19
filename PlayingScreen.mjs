@@ -24,6 +24,7 @@ export class PlayingScreen extends State {
                     new Point(CanvasSize.w / 2, CanvasSize.h / 2),
                     Math.random() * 2 * Math.PI,
                     assets.images.ship,
+                    assets.images.shipDestroyed,
                     assets.sprites.enginesIdle,
                     assets.sprites.enginesPowered,
                     assets.images.particleSmoke,
@@ -37,6 +38,7 @@ export class PlayingScreen extends State {
                         new Point(Math.random() * CanvasSize.w, Math.random() * CanvasSize.h),
                         Math.random() * 2 * Math.PI,
                         assets.images.ship,
+                        assets.images.shipDestroyed,
                         assets.sprites.enginesIdle,
                         assets.sprites.enginesPowered,
                         assets.images.particleSmoke,
@@ -70,9 +72,9 @@ export class PlayingScreen extends State {
                 gameController.update(time, dt);
 
                 if (gameController.isWon) {
-                    stateMachine.switchTo("result", {...gameController.playerScore, numEnemies, won: true, ships });
+                    stateMachine.switchTo("result", { ...gameController.playerScore, numEnemies, won: true, ships });
                 } else if (gameController.isLost) {
-                    stateMachine.switchTo("result", {...gameController.playerScore, numEnemies, won: false, ships });
+                    stateMachine.switchTo("result", { ...gameController.playerScore, numEnemies, won: false, ships });
                 }
             }, (ctx, time, data) => {
                 const { ships, starfield, gateManager, gameController } = data;

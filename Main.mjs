@@ -25,6 +25,7 @@ GameGame(
 
         const images = await loadImages({
             ship: "assets/ship.png",
+            shipDestroyed: "assets/ship_destroyed.png",
             enginesIdle: "assets/engines_idle.png",
             enginesPowered: "assets/engines_powered.png",
             particleSmoke: "assets/particle_smoke.png"
