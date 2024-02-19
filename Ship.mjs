@@ -101,6 +101,9 @@ export class Ship {
         const angle = this._acceleration.direction;
 
         const renderShipAt = (x, y) => {
+            if (this.#destroyed) {
+                ctx.globalAlpha = 0.7;
+            }
             drawImageCentered(ctx, this.#destroyed ? this.#shipDestroyed : this.#ship, x, y, angle);
 
             if (!this.#destroyed) {
@@ -112,6 +115,8 @@ export class Ship {
                     drawImageCentered(ctx, this.#enginesPowered[index], x, y, angle);
                 }
             }
+
+            ctx.globalAlpha = 1.0;
         }
 
         renderShipAt(this._pos.x, this._pos.y);
